@@ -3,9 +3,9 @@ package org.university.common.model;
 import java.util.Objects;
 
 public class Student {
-    public final String groupNumber;
-    public final double averageScore;
-    public final String recordBookNumber;
+    private final String groupNumber;
+    private final double averageScore;
+    private final String recordBookNumber;
 
     private Student(Builder builder) {
         groupNumber = builder.groupNumber;
