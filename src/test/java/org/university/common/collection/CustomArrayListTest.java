@@ -1,9 +1,7 @@
-package tests;
+package org.university.common.collection;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.university.common.collection.CustomArrayList;
-import org.university.common.collection.CustomList;
 
 import java.util.List;
 import java.util.stream.Collectors;
