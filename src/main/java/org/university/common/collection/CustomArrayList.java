@@ -1,10 +1,11 @@
 package org.university.common.collection;
 
-import java.lang.reflect.Array;
+import org.university.common.Constants;
+
+import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
@@ -12,16 +13,13 @@ import java.util.stream.StreamSupport;
 
 public class CustomArrayList<T> implements CustomList<T> {
 
-    private static final int DEFAULT_CAPACITY = 10;
-
     private Object[] elementData;
     private int size;
 
-    // Для fail-fast iterator
     private int modCount;
 
     public CustomArrayList() {
-        this.elementData = new Object[DEFAULT_CAPACITY];
+        this.elementData = new Object[Constants.DEFAULT_CAPACITY];
         this.size = 0;
     }
 
@@ -29,7 +27,9 @@ public class CustomArrayList<T> implements CustomList<T> {
         if (initialCapacity < 0) {
             throw new IllegalArgumentException("initialCapacity must be >= 0");
         }
-        this.elementData = new Object[Math.max(initialCapacity, DEFAULT_CAPACITY)];
+
+        int capacity = (initialCapacity == 0) ? Constants.DEFAULT_CAPACITY : initialCapacity;
+        this.elementData = new Object[capacity];
         this.size = 0;
     }
 
@@ -63,7 +63,7 @@ public class CustomArrayList<T> implements CustomList<T> {
             System.arraycopy(elementData, index + 1, elementData, index, numMoved);
         }
 
-        elementData[--size] = null; // help GC
+        elementData[--size] = null;
         modCount++;
         return oldValue;
     }
@@ -83,9 +83,7 @@ public class CustomArrayList<T> implements CustomList<T> {
         if (size == 0) {
             return;
         }
-        for (int i = 0; i < size; i++) {
-            elementData[i] = null;
-        }
+        Arrays.fill(elementData, 0, size, null);
         size = 0;
         modCount++;
     }
@@ -96,17 +94,9 @@ public class CustomArrayList<T> implements CustomList<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T[] toArray() {
-        Class<?> componentType = findFirstNonNullComponentType();
-        @SuppressWarnings("unchecked")
-        T[] result = (T[]) Array.newInstance(componentType, size);
-
-        for (int i = 0; i < size; i++) {
-            @SuppressWarnings("unchecked")
-            T value = (T) elementData[i];
-            result[i] = value;
-        }
-        return result;
+        return (T[]) Arrays.copyOf(elementData, size);
     }
 
     @Override
@@ -128,13 +118,13 @@ public class CustomArrayList<T> implements CustomList<T> {
 
     private void grow(int minCapacity) {
         int oldCapacity = elementData.length;
-        int newCapacity = oldCapacity + (oldCapacity >> 1); // * 1.5
+        int newCapacity = oldCapacity * 2;
+
         if (newCapacity < minCapacity) {
             newCapacity = minCapacity;
         }
-        Object[] newArray = new Object[newCapacity];
-        System.arraycopy(elementData, 0, newArray, 0, size);
-        elementData = newArray;
+
+        elementData = Arrays.copyOf(elementData, newCapacity);
     }
 
     private void rangeCheck(int index) {
@@ -152,20 +142,10 @@ public class CustomArrayList<T> implements CustomList<T> {
         return (T) elementData[index];
     }
 
-    private Class<?> findFirstNonNullComponentType() {
-        for (int i = 0; i < size; i++) {
-            Object v = elementData[i];
-            if (v != null) {
-                return v.getClass();
-            }
-        }
-        return Object.class; // если все null или список пустой
-    }
-
     private final class Itr implements Iterator<T> {
         private int cursor;
         private int lastRet = -1;
-        private final int expectedModCount;
+        private int expectedModCount;
 
         private Itr() {
             this.expectedModCount = modCount;
@@ -184,12 +164,9 @@ public class CustomArrayList<T> implements CustomList<T> {
             if (i >= size) {
                 throw new NoSuchElementException();
             }
-            Object[] elementData = CustomArrayList.this.elementData;
             cursor = i + 1;
             lastRet = i;
-            @SuppressWarnings("unchecked")
-            T value = (T) elementData[i];
-            return value;
+            return elementAt(i);
         }
 
         @Override
@@ -198,9 +175,11 @@ public class CustomArrayList<T> implements CustomList<T> {
             if (lastRet < 0) {
                 throw new IllegalStateException("next() has not been called yet");
             }
+
             CustomArrayList.this.remove(lastRet);
             cursor = lastRet;
             lastRet = -1;
+            expectedModCount = modCount;
         }
 
         private void checkForComodification() {
@@ -208,17 +187,5 @@ public class CustomArrayList<T> implements CustomList<T> {
                 throw new ConcurrentModificationException("List was modified during iteration");
             }
         }
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder("CustomArrayList{size=");
-        sb.append(size).append(", elements=[");
-        for (int i = 0; i < size; i++) {
-            sb.append(Objects.toString(elementData[i]));
-            if (i < size - 1) sb.append(", ");
-        }
-        sb.append("]}");
-        return sb.toString();
     }
 }

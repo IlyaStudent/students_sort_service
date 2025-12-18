@@ -1,4 +1,4 @@
-package org.university.common.tests;
+package tests;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 class CustomArrayListTest {
+
+    // TODO: write more tests
 
     @Test
     void addAndGetShouldWork() {
@@ -74,14 +76,16 @@ class CustomArrayListTest {
     }
 
     @Test
-    void toArrayShouldReturnTypedArrayWhenPossible() {
+    void toArrayShouldReturnArrayWithSameElements() {
         CustomList<String> list = new CustomArrayList<>();
         list.add("A");
         list.add("B");
 
-        String[] arr = list.toArray();
+        Object[] arr = list.toArray();
 
-        Assertions.assertArrayEquals(new String[]{"A", "B"}, arr);
+        Assertions.assertEquals(2, arr.length);
+        Assertions.assertEquals("A", arr[0]);
+        Assertions.assertEquals("B", arr[1]);
     }
 
     @Test
