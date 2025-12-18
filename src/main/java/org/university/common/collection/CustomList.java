@@ -1,0 +1,24 @@
+package org.university.common.collection;
+
+import java.util.stream.Stream;
+
+public interface CustomList<T> extends Iterable<T> {
+
+    void add(T element);
+
+    T get(int index);
+
+    void set(int index, T element);
+
+    T remove(int index);
+
+    int size();
+
+    boolean isEmpty();
+
+    void clear();
+
+    Stream<T> stream();
+
+    T[] toArray();
+}
