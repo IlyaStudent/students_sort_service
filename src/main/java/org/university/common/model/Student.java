@@ -2,7 +2,7 @@ package org.university.common.model;
 
 import java.util.Objects;
 
-public class Student {
+public class Student implements Comparable<Student> {
     private final String groupNumber;
     private final double averageScore;
     private final String recordBookNumber;
@@ -11,6 +11,21 @@ public class Student {
         groupNumber = builder.groupNumber;
         averageScore = builder.averageScore;
         recordBookNumber = builder.recordBookNumber;
+    }
+
+    @Override
+    public int compareTo(Student other) {
+        int result = this.groupNumber.compareTo(other.groupNumber);
+        if (result != 0) {
+            return result;
+        }
+
+        result = Double.compare(this.averageScore, other.averageScore);
+        if (result != 0) {
+            return result;
+        }
+
+        return this.recordBookNumber.compareTo(other.recordBookNumber);
     }
 
     public static class Builder {
