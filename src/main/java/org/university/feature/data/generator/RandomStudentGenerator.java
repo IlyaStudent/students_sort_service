@@ -4,7 +4,6 @@ import org.university.common.collection.CustomArrayList;
 import org.university.common.collection.CustomList;
 import org.university.common.model.Student;
 import org.university.common.util.Constants;
-
 import java.util.Random;
 
 public class RandomStudentGenerator implements DataGenerator{
@@ -56,7 +55,6 @@ public class RandomStudentGenerator implements DataGenerator{
 
     private String generateRecordBookNumber() {
         int year = 2000 + random.nextInt(26);
-
         int baseNumber = 10000 + 17;
         int randomOffset = random.nextInt(1000);
         int recordNumber = (baseNumber + randomOffset) % 90000 + 10000;

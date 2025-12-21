@@ -27,7 +27,9 @@ public class RecordBookValidator implements Validator<CustomList<Student>> {
         }
         if (!recordBookNumber.matches("\\d{4}-\\d{5}")) {
             throw new ValidationException(
-                    "Record book number field value is invalid ", "recordBookNumber", recordBookNumber
+                    "Record book number field value is invalid ",
+                    "recordBookNumber",
+                    recordBookNumber
             );
         }
     }

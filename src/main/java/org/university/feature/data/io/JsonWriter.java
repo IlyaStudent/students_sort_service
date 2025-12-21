@@ -4,7 +4,6 @@ import com.google.gson.*;
 import org.university.common.collection.CustomList;
 import org.university.common.exception.DataLoadException;
 import org.university.common.model.Student;
-
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -47,8 +46,7 @@ public class JsonWriter {
 
             writeJsonArray(existingStudents, filePath);
 
-            System.out.printf("%d students were added to database",
-                    addedCount);
+            System.out.printf("%d students were added to database", addedCount);
 
         } catch (IOException e) {
             throw new DataLoadException(
@@ -77,7 +75,7 @@ public class JsonWriter {
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write(gson.toJson(jsonArray));
         } catch (IOException e) {
-            throw new DataLoadException("test");
+            throw new DataLoadException("JSON writing error", e);
         }
     }
 
