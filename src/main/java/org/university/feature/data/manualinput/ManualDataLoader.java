@@ -20,7 +20,7 @@ public class ManualDataLoader implements ManualInput {
     private final JsonWriter jsonWriter;
 
     public ManualDataLoader() {
-        this.scanner = new Scanner(System.in).useLocale(Locale.US);;
+        this.scanner = new Scanner(System.in).useLocale(Locale.US);
         this.jsonWriter = new JsonWriter();
     }
 
