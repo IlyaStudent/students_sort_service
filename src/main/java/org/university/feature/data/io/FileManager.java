@@ -10,13 +10,13 @@ public class FileManager {
 
     public static String getJSON_Filepath(String fileName) {
         if (fileName.isEmpty()) {
-            throw new IllegalArgumentException("Invalid filename: " + fileName);
+            throw new IllegalArgumentException("Filename should not be empty");
         }
         if (!JSON_FILE_PATTERN.matcher(fileName).matches()) {
             throw new IllegalArgumentException(
                     "Wrong file name format" +
                     "Filename should only contain letters, numbers, spaces and following symbols: " +
-                    "_, -, ., ");
+                    "_, -, . ");
         }
         return JSON_FILEPATH + fileName;
     }
