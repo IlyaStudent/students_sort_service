@@ -1,0 +1,22 @@
+[
+  {
+    "groupNumber": "AZ-111",
+    "averageScore": 4.0,
+    "recordBookNumber": "2024-12345"
+  },
+  {
+    "groupNumber": "AZ-121",
+    "averageScore": 4.0,
+    "recordBookNumber": "2024-12345"
+  },
+  {
+    "groupNumber": "CC-555",
+    "averageScore": 5.0,
+    "recordBookNumber": "2024-55555"
+  },
+  {
+    "groupNumber": "CC-666",
+    "averageScore": 5.0,
+    "recordBookNumber": "2024-55555"
+  }
+]
