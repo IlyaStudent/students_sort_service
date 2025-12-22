@@ -1,25 +1,11 @@
 package org.university.common.validator;
 
-import org.university.common.collection.CustomList;
 import org.university.common.exception.ValidationException;
-import org.university.common.model.Student;
 
-public class GroupNumberValidator implements Validator<CustomList<Student>> {
+public class GroupNumberValidator implements Validator<String> {
 
     @Override
-    public void validate(CustomList<Student> arrayList) {
-        if (arrayList == null || arrayList.isEmpty()) {
-            throw new ValidationException(
-                    "List cannot be empty"
-            );
-        }
-
-        for (Student student : arrayList) {
-            isValidGroupNumber(student.getGroupNumber());
-        }
-    }
-
-    public void isValidGroupNumber(String groupNumber) {
+    public void validate(String groupNumber) {
         if (groupNumber == null || groupNumber.isEmpty()) {
             throw new ValidationException(
                     "Group number cannot be empty"

@@ -1,27 +1,14 @@
 package org.university.common.validator;
 
-import org.university.common.collection.CustomList;
 import org.university.common.exception.ValidationException;
-import org.university.common.model.Student;
+import org.university.common.util.Constants;
 
-public class AverageScoreValidator implements Validator<CustomList<Student>> {
+public class AverageScoreValidator implements Validator<Double> {
 
     @Override
-    public void validate(CustomList<Student> arrayList) {
-        if (arrayList == null || arrayList.isEmpty()) {
-            throw new ValidationException(
-                    "List cannot be empty"
-            );
-        }
-
-        for (Student student : arrayList) {
-            double score = student.getAverageScore();
-            isValidScore(score);
-        }
-    }
-
-    public void isValidScore(double score) {
-        if (score < 0.0 || score > 5.0) {
+    public void validate(Double score) {
+        if (score < Constants.MIN_AVERAGE_SCORE
+                || score > Constants.MAX_AVERAGE_SCORE) {
             throw new ValidationException(
                     "Average score field value is invalid ",
                     "averageScore",
