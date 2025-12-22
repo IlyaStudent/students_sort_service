@@ -2,30 +2,24 @@ package org.university.feature.data.manualinput;
 
 import org.university.common.collection.CustomArrayList;
 import org.university.common.collection.CustomList;
-import org.university.common.exception.DataLoadException;
 import org.university.common.model.Student;
-import org.university.common.util.Constants;
 import org.university.common.validator.AverageScoreValidator;
 import org.university.common.validator.GroupNumberValidator;
 import org.university.common.validator.RecordBookValidator;
-import org.university.feature.data.io.FileManager;
-import org.university.feature.data.io.JsonWriter;
 import java.util.InputMismatchException;
 import java.util.Locale;
 import java.util.Scanner;
 
-public class ManualDataLoader implements ManualInput {
+public class ManualInputImpl implements ManualInput{
 
     private final Scanner scanner;
-    private final JsonWriter jsonWriter;
 
-    public ManualDataLoader() {
+    public ManualInputImpl() {
         this.scanner = new Scanner(System.in).useLocale(Locale.US);
-        this.jsonWriter = new JsonWriter();
     }
 
     @Override
-    public CustomList<Student> inputData(int count) throws DataLoadException {
+    public CustomList<Student> inputData(int count) throws InputMismatchException {
         CustomList<Student> students = new CustomArrayList<>();
 
         for (int i = 0; i < count; i++) {
@@ -35,11 +29,6 @@ public class ManualDataLoader implements ManualInput {
         for (Student student : students) {
             System.out.println(student.toString());
         }
-        jsonWriter.writeData(
-                students,
-                FileManager.getJSON_Filepath(Constants.JSON_FILENAME),
-                true
-        );
         return students;
     }
 
@@ -68,7 +57,7 @@ public class ManualDataLoader implements ManualInput {
             String input = scanner.nextLine().trim().toUpperCase();
 
             GroupNumberValidator validator = new GroupNumberValidator();
-            validator.isValidGroupNumber(input);
+            validator.validate(input);
             return input;
         }
     }
@@ -81,7 +70,7 @@ public class ManualDataLoader implements ManualInput {
                 scanner.nextLine();
 
                 AverageScoreValidator validator = new AverageScoreValidator();
-                validator.isValidScore(score);
+                validator.validate(score);
                 return score;
 
             } catch (InputMismatchException e) {
@@ -97,7 +86,7 @@ public class ManualDataLoader implements ManualInput {
             String input = scanner.nextLine().trim();
 
             RecordBookValidator validator = new RecordBookValidator();
-            validator.isValidRecordBookNumber(input);
+            validator.validate(input);
             return input;
         }
     }
