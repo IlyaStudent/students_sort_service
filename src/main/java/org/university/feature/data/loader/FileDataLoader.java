@@ -21,7 +21,7 @@ public class FileDataLoader implements DataLoader {
     @Override
     public CustomList<Student> loadData(int count) throws DataLoadException, ValidationException {
         CustomList<Student> students = jsonReader.parseStudents(Constants.JSON_FILENAME, count);
-        dataValidator.validate(students);
+        dataValidator.validateStudentList(students);
         return students;
     }
 

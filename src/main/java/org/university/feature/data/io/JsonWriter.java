@@ -19,7 +19,7 @@ public class JsonWriter {
         this.gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
-    public void writeData(CustomList<Student> students, String filePath, boolean checkDuplicates)
+    public void writeData(CustomList<Student> students, String filePath)
             throws DataLoadException {
         if (students == null) {
             throw new DataLoadException("List of students cannot be null");
@@ -35,7 +35,7 @@ public class JsonWriter {
             for (Student student : students) {
                 JsonObject studentJson = createStudentJson(student);
 
-                if (checkDuplicates && isDuplicate(existingStudents, studentJson)) {
+                if (isDuplicate(existingStudents, studentJson)) {
                     System.out.printf("Duplicate student skipped: %s%n", student);
                     continue;
                 }

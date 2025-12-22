@@ -1,23 +1,19 @@
 package org.university.feature.data.io;
 
-import java.util.regex.Pattern;
+import org.university.common.util.Constants;
 
 public class FileManager {
 
-    private static final Pattern JSON_FILE_PATTERN =
-            Pattern.compile("^[a-zA-Z0-9_.\\-\\s]+?\\.json$", Pattern.CASE_INSENSITIVE);
-    private static final String JSON_FILEPATH = "src/main/resources/data/";
-
-    public static String getJSON_Filepath(String fileName) {
+    public static String getJsonFilepath(String fileName) {
         if (fileName.isEmpty()) {
             throw new IllegalArgumentException("Filename should not be empty");
         }
-        if (!JSON_FILE_PATTERN.matcher(fileName).matches()) {
+        if (!Constants.JSON_FILE_PATTERN.matcher(fileName).matches()) {
             throw new IllegalArgumentException(
                     "Wrong file name format" +
                     "Filename should only contain letters, numbers, spaces and following symbols: " +
                     "_, -, . ");
         }
-        return JSON_FILEPATH + fileName;
+        return Constants.JSON_FILEPATH + fileName;
     }
 }

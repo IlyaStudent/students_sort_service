@@ -58,7 +58,7 @@ public class JsonReader {
     }
 
     private JsonArray readFromFile(String fileName, int count) {
-        String filePath = FileManager.getJSON_Filepath(fileName);
+        String filePath = FileManager.getJsonFilepath(fileName);
         JsonArray jsonArray;
         try (FileReader reader = new FileReader(filePath)) {
             JsonElement jsonElement = JsonParser.parseReader(reader);
