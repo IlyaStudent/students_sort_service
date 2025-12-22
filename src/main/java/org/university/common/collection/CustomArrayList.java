@@ -34,7 +34,7 @@ public class CustomArrayList<T> implements CustomList<T> {
     }
 
     @Override
-    public void add(T element) {
+    public void add(int i, T element) {
         ensureCapacityInternal(size + 1);
         elementData[size++] = element;
         modCount++;
@@ -95,8 +95,23 @@ public class CustomArrayList<T> implements CustomList<T> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public T[] toArray() {
+    public T[] toArray(String[] strings) {
         return (T[]) Arrays.copyOf(elementData, size);
+    }
+
+    @Override
+    public int lastIndexOf(T b) {
+        return 0;
+    }
+
+    @Override
+    public int indexOf(Object o) {
+        return 0;
+    }
+
+    @Override
+    public boolean contains(T a) {
+        return false;
     }
 
     @Override

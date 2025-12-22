@@ -4,7 +4,7 @@ import java.util.stream.Stream;
 
 public interface CustomList<T> extends Iterable<T> {
 
-    void add(T element);
+    void add(int i, T element);
 
     T get(int index);
 
@@ -20,5 +20,11 @@ public interface CustomList<T> extends Iterable<T> {
 
     Stream<T> stream();
 
-    T[] toArray();
+    T[] toArray(String[] strings);
+
+    int lastIndexOf(T b);
+
+    int indexOf(Object o);
+
+    boolean contains(T a);
 }
