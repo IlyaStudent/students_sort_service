@@ -104,7 +104,7 @@ public class MenuHandler {
     }
 
     private void processSelectAlgorithmSort(CustomList<Student> students) {
-        while (true) {
+        while (isRunning) {
             GeneralSortAlgorithmOption sortOption = consoleUI.promptSortAlgorithmOption();
 
             if (sortOption == GeneralSortAlgorithmOption.BACK) {
@@ -124,8 +124,16 @@ public class MenuHandler {
 
     private boolean processDataSort(GeneralSortAlgorithmOption sortOption, CustomList<Student> students) {
         SpecificSortOption specificSortOption = consoleUI.promptSpecificSortOption();
-        sortContext.setStrategy(SortFactory.getSortStrategyFromOptions(sortOption, specificSortOption));
+        if (specificSortOption == SpecificSortOption.BACK) {
+            return false;
+        }
 
+        if (specificSortOption == SpecificSortOption.EXIT) {
+            isRunning = false;
+            return false;
+        }
+
+        sortContext.setStrategy(SortFactory.getSortStrategyFromOptions(sortOption, specificSortOption));
         if (specificSortOption == SpecificSortOption.SORT_ALL_EVEN_FIELDS) {
             sortContext.executeSort(students, Comparator.comparingDouble(Student::getAverageScore));
         } else {
