@@ -23,10 +23,6 @@ public class RandomStudentGenerator implements DataGenerator{
             students.add(student);
         }
 
-        System.out.printf("Generated %d random students%n", count);
-        for (Student student : students) {
-            System.out.println(student.toString());
-        }
         return students;
     }
 
