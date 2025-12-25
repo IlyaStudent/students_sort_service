@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public enum SpecificSortOption implements CodeOption {
     SORT_ALL_FIELDS(1, Constants.DESCRIPTION_SORT_ALL_FIELDS),
-    SORT_ALL_EVEN_FIELDS(2, Constants.DESCRIPTION_SORT_ALL_EVEN_VALUES_BY_NUMBER_FIELD),
+    SORT_EVEN_SCORE(2, Constants.DESCRIPTION_SORT_ALL_EVEN_VALUES_BY_NUMBER_FIELD),
     BACK(3, Constants.DESCRIPTION_OPTION_BACK),
     EXIT(4, Constants.DESCRIPTION_OPTION_EXIT);
 

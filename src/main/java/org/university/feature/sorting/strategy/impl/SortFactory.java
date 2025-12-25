@@ -16,7 +16,7 @@ public final class SortFactory {
         return switch (specificSortOption) {
             case SORT_ALL_FIELDS ->
                     BasicSortFactory.getInstanceFromAlgorithmOption(algorithmOption);
-            case SORT_ALL_EVEN_FIELDS ->
+            case SORT_EVEN_SCORE ->
                     EvenOddSortFactory.getInstanceFromAlgorithmOption(algorithmOption);
             default ->
                     throw new IllegalArgumentException(
