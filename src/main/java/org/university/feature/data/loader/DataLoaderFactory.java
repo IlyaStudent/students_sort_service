@@ -16,7 +16,6 @@ public final class DataLoaderFactory {
     private static DataLoader createLoader(DataLoadOption option) {
         return switch (option) {
             case FILE -> new FileDataLoader();
-            case CONSOLE -> new ManualDataLoader();
             case GENERATION -> new RandomDataLoader();
             default ->
                     throw new IllegalArgumentException(
