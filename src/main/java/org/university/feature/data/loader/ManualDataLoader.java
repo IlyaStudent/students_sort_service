@@ -3,13 +3,10 @@ package org.university.feature.data.loader;
 import org.university.common.collection.CustomList;
 import org.university.common.exception.DataLoadException;
 import org.university.common.model.Student;
-import org.university.common.util.Constants;
-import org.university.feature.data.io.FileManager;
-import org.university.feature.data.io.JsonWriter;
 import org.university.feature.data.manualinput.ManualInput;
 import org.university.feature.data.manualinput.ManualInputImpl;
 
-public class ManualDataLoader implements DataLoader {
+public class ManualDataLoader implements DataLoaderCloseable {
 
     private final ManualInput manualInput;
 
@@ -25,5 +22,10 @@ public class ManualDataLoader implements DataLoader {
     @Override
     public String getLoaderType() {
         return this.getClass().getName();
+    }
+
+    @Override
+    public void close() {
+        manualInput.close();
     }
 }

@@ -88,4 +88,9 @@ public class ManualInputImpl implements ManualInput {
             return input;
         }
     }
+
+    @Override
+    public void close() {
+        scanner.close();
+    }
 }
