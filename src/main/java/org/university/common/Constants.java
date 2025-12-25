@@ -2,8 +2,7 @@ package org.university.common;
 
 public final class Constants {
 
-    private Constants() {
-    }
+    private Constants() {}
 
     public static final int DEFAULT_CAPACITY = 10;
 
@@ -22,4 +21,10 @@ public final class Constants {
     public static final String COMPARATOR_CANNOT_BE_NULL = "Comparator cannot be null";
     public static final String EVEN_ODD_SORT_EXCEPTION = "EvenOdd sort works only with Student objects";
 
+    public static final String DESCRIPTION_OPTION_BACK = "Назад";
+    public static final String DESCRIPTION_OPTION_EXIT = "Выход";
+
+    public static final String DESCRIPTION_SORT_ALL_FIELDS = "Отсортировать объекты по всем полям";
+    public static final String DESCRIPTION_SORT_ALL_EVEN_VALUES_BY_NUMBER_FIELD =
+            "Отсортировать объекты с четными значениями по среднему баллу";
 }
