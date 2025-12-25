@@ -67,9 +67,11 @@ public class Student implements Comparable<Student> {
 
     @Override
     public String toString() {
-        return String.format(
-                "Студент - { Номер группы - [%s], Средний балл - [%.2f], Номер зачетной книжки - [%s] }",
-                groupNumber, averageScore, recordBookNumber);
+        return "Student{" +
+                "groupNumber='" + groupNumber + '\'' +
+                ", averageScore=" + averageScore +
+                ", recordBookNumber='" + recordBookNumber + '\'' +
+                '}';
     }
 
     @Override
@@ -77,9 +79,9 @@ public class Student implements Comparable<Student> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Student student = (Student) o;
-        return Double.compare(averageScore, student.averageScore) == 0
-                && Objects.equals(groupNumber, student.groupNumber)
-                && Objects.equals(recordBookNumber, student.recordBookNumber);
+        return Double.compare(averageScore, student.averageScore) == 0 &&
+                Objects.equals(groupNumber, student.groupNumber) &&
+                Objects.equals(recordBookNumber, student.recordBookNumber);
     }
 
     @Override

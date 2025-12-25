@@ -10,7 +10,7 @@ import java.util.InputMismatchException;
 import java.util.Locale;
 import java.util.Scanner;
 
-public class ManualInputImpl implements ManualInput {
+public class ManualInputImpl implements ManualInput{
 
     private final Scanner scanner;
 
@@ -26,7 +26,9 @@ public class ManualInputImpl implements ManualInput {
             Student student = readStudentData(i + 1);
             students.add(student);
         }
-
+        for (Student student : students) {
+            System.out.println(student.toString());
+        }
         return students;
     }
 
@@ -36,7 +38,7 @@ public class ManualInputImpl implements ManualInput {
     }
 
     private Student readStudentData(int studentNumber) {
-        System.out.printf("\nПожалуйста введите данные для студента под номером #%d:%n", studentNumber);
+        System.out.printf("Please enter data for student number #%d:%n", studentNumber);
 
         String groupNumber = readGroupNumber();
         double averageScore = readAverageScore();
@@ -51,7 +53,7 @@ public class ManualInputImpl implements ManualInput {
 
     private String readGroupNumber() {
         while (true) {
-            System.out.print("\nВведите номер группы (формат: XX-NNN, пример: CS-101): ");
+            System.out.print("Enter group number (format: XX-NNN, example CS-101): ");
             String input = scanner.nextLine().trim().toUpperCase();
 
             GroupNumberValidator validator = new GroupNumberValidator();
@@ -63,7 +65,7 @@ public class ManualInputImpl implements ManualInput {
     private double readAverageScore() {
         while (true) {
             try {
-                System.out.print("Введите средний балл (0.0 - 5.0): ");
+                System.out.print("Enter average score (0.0 - 5.0): ");
                 double score = scanner.nextDouble();
                 scanner.nextLine();
 
@@ -72,7 +74,7 @@ public class ManualInputImpl implements ManualInput {
                 return score;
 
             } catch (InputMismatchException e) {
-                System.out.println("Введите номер (пример: 4.5 или 3.7)");
+                System.out.println("Enter number (ex.: 4.5 or 3.7)");
                 scanner.nextLine();
             }
         }
@@ -80,17 +82,12 @@ public class ManualInputImpl implements ManualInput {
 
     private String readRecordBookNumber() {
         while (true) {
-            System.out.print("Введите номер зачетной книжки (формат: YYYY-NNNNN, пример: 2023-12345): ");
+            System.out.print("Enter record book number (format: YYYY-NNNNN, ex. 2023-12345): ");
             String input = scanner.nextLine().trim();
 
             RecordBookValidator validator = new RecordBookValidator();
             validator.validate(input);
             return input;
         }
-    }
-
-    @Override
-    public void close() {
-        scanner.close();
     }
 }

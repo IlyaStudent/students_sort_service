@@ -46,6 +46,9 @@ public class JsonReader {
                 loadedCount++;
             }
 
+            System.out.printf("%d students loaded",
+                    loadedCount);
+
         } catch (JsonSyntaxException e) {
             throw new DataLoadException("JSON syntax error", e);
         } catch (Exception e) {

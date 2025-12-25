@@ -36,7 +36,7 @@ public class JsonWriter {
                 JsonObject studentJson = createStudentJson(student);
 
                 if (isDuplicate(existingStudents, studentJson)) {
-//                    System.out.printf("Пропущено повторное добавление записи: %s%n", student);
+                    System.out.printf("Duplicate student skipped: %s%n", student);
                     continue;
                 }
 
@@ -45,7 +45,8 @@ public class JsonWriter {
             }
 
             writeJsonArray(existingStudents, filePath);
-            System.out.printf("Количество записей успешно записанных в файл: %d.\n", addedCount);
+
+            System.out.printf("%d students were added to database", addedCount);
 
         } catch (IOException e) {
             throw new DataLoadException(
