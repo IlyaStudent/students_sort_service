@@ -134,7 +134,7 @@ public class MenuHandler {
         }
 
         sortContext.setStrategy(SortFactory.getSortStrategyFromOptions(sortOption, specificSortOption));
-        if (specificSortOption == SpecificSortOption.SORT_ALL_EVEN_FIELDS) {
+        if (specificSortOption == SpecificSortOption.SORT_EVEN_SCORE) {
             sortContext.executeSort(students, Comparator.comparingDouble(Student::getAverageScore));
         } else {
             sortContext.executeSort(students);
