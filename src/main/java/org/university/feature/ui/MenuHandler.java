@@ -4,8 +4,7 @@ import org.university.common.collection.CustomList;
 import org.university.common.util.Constants;
 import org.university.feature.data.io.FileManager;
 import org.university.feature.data.io.JsonWriter;
-import org.university.feature.data.loader.DataLoader;
-import org.university.feature.data.loader.DataLoaderFactory;
+import org.university.feature.data.loader.*;
 import org.university.feature.search.StudentSearcher;
 import org.university.feature.sorting.strategy.SortContext;
 import org.university.feature.sorting.strategy.impl.SortFactory;
@@ -29,7 +28,8 @@ public class MenuHandler {
 
     private boolean isRunning = true;
 
-    public MenuHandler(ConsoleUI consoleUI, StudentSearcher searcher, JsonWriter jsonWriter, SortContext sortContext) {
+    public MenuHandler(ConsoleUI consoleUI, StudentSearcher searcher,
+                       JsonWriter jsonWriter, SortContext sortContext) {
         this.consoleUI = consoleUI;
         this.searcher = searcher;
         this.jsonWriter = jsonWriter;
@@ -37,33 +37,41 @@ public class MenuHandler {
     }
 
     public void process() {
-        consoleUI.displayMessage("\n=== Система сортировки студентов ===");
-
         try {
+            consoleUI.displayMessage("\n=== Система сортировки студентов ===");
             processLoadData();
         } catch (Exception e) {
             consoleUI.displayMessage("Unexpected error: " + e.getMessage());
-            throw e;
-
         } finally {
             closeAllBeforeExit();
         }
     }
 
-    private void processLoadData() {
+    private void processLoadData() throws Exception {
         while (isRunning) {
             DataLoadOption loadOption = consoleUI.promptLoadOption();
-
             if (loadOption == DataLoadOption.EXIT) {
                 return;
             }
 
             int count = consoleUI.promptNumberOfRecords();
-            DataLoader loader = DataLoaderFactory.getInstanceFromOption(loadOption);
-            CustomList<Student> students = consoleUI.promptDataStudents(loader, count);
+            CustomList<Student> students;
+
+            if (loadOption == DataLoadOption.CONSOLE) {
+                try (DataLoaderCloseable loader =
+                        DataLoaderCloseableFactory.newInstance(loadOption)) {
+                    students = consoleUI.promptDataStudents(loader, count);
+                }
+            } else {
+                DataLoader loader = DataLoaderFactory.getInstanceFromOption(loadOption);
+                students = consoleUI.promptDataStudents(loader, count);
+            }
 
             if (!students.isEmpty()) {
                 processData(students);
+            } else {
+                consoleUI.displayMessage("Коллекция не должна быть пустой!");
+                throw new IllegalStateException("Collection cannot be empty");
             }
         }
     }
@@ -122,7 +130,8 @@ public class MenuHandler {
         }
     }
 
-    private boolean processDataSort(GeneralSortAlgorithmOption sortOption, CustomList<Student> students) {
+    private boolean processDataSort(
+            GeneralSortAlgorithmOption sortOption, CustomList<Student> students) {
         SpecificSortOption specificSortOption = consoleUI.promptSpecificSortOption();
         if (specificSortOption == SpecificSortOption.BACK) {
             return false;
@@ -133,8 +142,9 @@ public class MenuHandler {
             return false;
         }
 
-        sortContext.setStrategy(SortFactory.getSortStrategyFromOptions(sortOption, specificSortOption));
-        if (specificSortOption == SpecificSortOption.SORT_ALL_EVEN_FIELDS) {
+        sortContext.setStrategy(
+                SortFactory.getSortStrategyFromOptions(sortOption, specificSortOption));
+        if (specificSortOption == SpecificSortOption.SORT_EVEN_SCORE) {
             sortContext.executeSort(students, Comparator.comparingDouble(Student::getAverageScore));
         } else {
             sortContext.executeSort(students);
