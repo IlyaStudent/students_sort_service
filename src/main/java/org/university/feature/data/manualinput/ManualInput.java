@@ -8,5 +8,4 @@ import java.util.InputMismatchException;
 public interface ManualInput {
     CustomList<Student> inputData(int count) throws InputMismatchException;
     String getInputType();
-    void close();
 }
