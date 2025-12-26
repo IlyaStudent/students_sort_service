@@ -20,11 +20,11 @@ public interface CustomList<T> extends Iterable<T> {
 
     Stream<T> stream();
 
-    T[] toArray(String[] strings);
+    T[] toArray(T[] a);
 
     int lastIndexOf(T b);
 
-    int indexOf(Object o);
+    int indexOf(T o);
 
     boolean contains(T a);
 }

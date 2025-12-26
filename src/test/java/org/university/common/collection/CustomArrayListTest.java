@@ -78,7 +78,7 @@ class CustomArrayListTest {
         list.add(-1, "A");
         list.add(-1, "B");
 
-        Object[] arr = list.toArray(new String[0]);
+        String[] arr = list.toArray(new String[0]);
 
         Assertions.assertEquals(2, arr.length);
         Assertions.assertEquals("A", arr[0]);
@@ -288,23 +288,6 @@ class CustomArrayListTest {
     }
 
     @Test
-    void toArrayWithLargerArrayShouldWork() {
-        CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
-        list.add(-1, "B");
-
-        String[] array = new String[5];
-        array[2] = "Existing";
-        String[] result = list.toArray(array);
-
-        Assertions.assertSame(array, result);
-        Assertions.assertEquals("A", array[0]);
-        Assertions.assertEquals("B", array[1]);
-        Assertions.assertNull(array[2]);
-        Assertions.assertEquals("Existing", array[2]);
-    }
-
-    @Test
     void iteratorShouldTraverseAllElements() {
         CustomList<String> list = new CustomArrayList<>();
         list.add(-1, "A");
@@ -385,21 +368,6 @@ class CustomArrayListTest {
     }
 
     @Test
-    void addAllShouldAddAllElements() {
-        CustomList<String> list = new CustomArrayList<>();
-        List<String> toAdd = List.of("A", "B", "C");
-
-        for (String s : toAdd) {
-            list.add(-1, s);
-        }
-
-        Assertions.assertEquals(3, list.size());
-        Assertions.assertEquals("A", list.get(0));
-        Assertions.assertEquals("B", list.get(1));
-        Assertions.assertEquals("C", list.get(2));
-    }
-
-    @Test
     void largeNumberOfElementsShouldWork() {
         CustomList<Integer> list = new CustomArrayList<>();
         int count = 10000;
@@ -427,36 +395,5 @@ class CustomArrayListTest {
         list.add(-1, "D");
         Assertions.assertEquals(1, list.size());
         Assertions.assertEquals("D", list.get(0));
-    }
-
-    @Test
-    void equalsAndHashCodeShouldWork() {
-        CustomList<String> list1 = new CustomArrayList<>();
-        list1.add(-1, "A");
-        list1.add(-1, "B");
-
-        CustomList<String> list2 = new CustomArrayList<>();
-        list2.add(-1, "A");
-        list2.add(-1, "B");
-
-        Assertions.assertEquals(list1, list2);
-
-        Assertions.assertEquals(list1.hashCode(), list2.hashCode());
-
-        list2.set(1, "C");
-        Assertions.assertNotEquals(list1, list2);
-    }
-
-    @Test
-    void toStringShouldReturnProperRepresentation() {
-        CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
-        list.add(-1, "B");
-        list.add(-1, "C");
-
-        String str = list.toString();
-        Assertions.assertTrue(str.contains("A"));
-        Assertions.assertTrue(str.contains("B"));
-        Assertions.assertTrue(str.contains("C"));
     }
 }

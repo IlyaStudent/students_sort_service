@@ -15,7 +15,6 @@ public class CustomArrayList<T> implements CustomList<T> {
 
     private Object[] elementData;
     private int size;
-
     private int modCount;
 
     public CustomArrayList() {
@@ -35,8 +34,22 @@ public class CustomArrayList<T> implements CustomList<T> {
 
     @Override
     public void add(int i, T element) {
+        if (i == -1) {
+            i = size;
+        }
+
+        if (i < 0 || i > size) {
+            throw new IndexOutOfBoundsException(outOfBoundsMsg(i));
+        }
+
         ensureCapacityInternal(size + 1);
-        elementData[size++] = element;
+
+        if (i < size) {
+            System.arraycopy(elementData, i, elementData, i + 1, size - i);
+        }
+
+        elementData[i] = element;
+        size++;
         modCount++;
     }
 
@@ -95,23 +108,57 @@ public class CustomArrayList<T> implements CustomList<T> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public T[] toArray(String[] strings) {
-        return (T[]) Arrays.copyOf(elementData, size);
+    public T[] toArray(T[] a) {
+        if (a.length < size) {
+            return (T[]) Arrays.copyOf(elementData, size, a.getClass());
+        }
+
+        System.arraycopy(elementData, 0, a, 0, size);
+        if (a.length > size) {
+            a[size] = null;
+        }
+        return a;
     }
 
     @Override
     public int lastIndexOf(T b) {
-        return 0;
+        if (b == null) {
+            for (int i = size - 1; i >= 0; i--) {
+                if (elementData[i] == null) {
+                    return i;
+                }
+            }
+        } else {
+            for (int i = size - 1; i >= 0; i--) {
+                if (b.equals(elementData[i])) {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 
     @Override
-    public int indexOf(Object o) {
-        return 0;
+    public int indexOf(T o) {
+        if (o == null) {
+            for (int i = 0; i < size; i++) {
+                if (elementData[i] == null) {
+                    return i;
+                }
+            }
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (o.equals(elementData[i])) {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 
     @Override
     public boolean contains(T a) {
-        return false;
+        return indexOf(a) >= 0;
     }
 
     @Override
