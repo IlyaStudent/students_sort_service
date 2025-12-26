@@ -11,15 +11,17 @@ import java.io.InputStreamReader;
 
 public class ConsoleReader implements InputReader {
 
+    private static ConsoleReader instance;
+
     private final BufferedReader in;
     private final InputValidator inputValidator;
     private final OutputWriter writer;
     private final Validator<String> groupNumberValidator;
 
-    public ConsoleReader(InputValidator inputValidator, OutputWriter writer) {
+    private ConsoleReader() {
         in = new BufferedReader(new InputStreamReader(System.in));
-        this.inputValidator = inputValidator;
-        this.writer = writer;
+        inputValidator = new InputValidator();
+        writer = ConsoleWriter.getInstance();
         groupNumberValidator = new GroupNumberValidator();
     }
 
@@ -71,5 +73,13 @@ public class ConsoleReader implements InputReader {
         } catch (IOException e) {
             throw new RuntimeException("Failed close resource", e);
         }
+    }
+
+    public static ConsoleReader getInstance() {
+        if (instance == null) {
+            instance = new ConsoleReader();
+        }
+
+        return instance;
     }
 }
