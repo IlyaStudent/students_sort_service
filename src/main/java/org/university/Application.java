@@ -14,9 +14,7 @@ public class Application {
     public static void main(String[] args) {
         InputValidator validator = new InputValidator();
 
-        ConsoleWriter out = new ConsoleWriter();
-        ConsoleReader in = new ConsoleReader(validator, out);
-        ConsoleUI consoleUI = new ConsoleUI(in, out);
+        ConsoleUI consoleUI = new ConsoleUI(ConsoleReader.getInstance(), ConsoleWriter.getInstance());
 
         StudentSearcher searcher = new MultiThreadSearcher();
         SortContext sortContext = new SortContext();

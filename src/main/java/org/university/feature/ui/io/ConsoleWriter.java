@@ -3,9 +3,11 @@ package org.university.feature.ui.io;
 import java.io.PrintWriter;
 
 public class ConsoleWriter implements OutputWriter {
+    private static ConsoleWriter instance;
+
     private final PrintWriter out;
 
-    public ConsoleWriter() {
+    private ConsoleWriter() {
         out = new PrintWriter(System.out, true);
     }
 
@@ -21,6 +23,14 @@ public class ConsoleWriter implements OutputWriter {
     public void printf(String format, Object ... args) {
         out.printf(format, args);
         out.flush();
+    }
+
+    public static ConsoleWriter getInstance() {
+        if (instance == null) {
+            instance = new ConsoleWriter();
+        }
+
+        return instance;
     }
 
     @Override
