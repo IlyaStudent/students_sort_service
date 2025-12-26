@@ -3,18 +3,17 @@ package org.university.feature.data.loader;
 import org.university.common.collection.CustomList;
 import org.university.common.exception.DataLoadException;
 import org.university.common.model.Student;
-import org.university.common.util.Constants;
-import org.university.feature.data.io.FileManager;
-import org.university.feature.data.io.JsonWriter;
 import org.university.feature.data.manualinput.ManualInput;
 import org.university.feature.data.manualinput.ManualInputImpl;
+import org.university.feature.ui.io.InputReader;
+import org.university.feature.ui.io.OutputWriter;
 
 public class ManualDataLoader implements DataLoader {
 
     private final ManualInput manualInput;
 
-    public ManualDataLoader() {
-        this.manualInput = new ManualInputImpl();
+    public ManualDataLoader(InputReader reader, OutputWriter writer) {
+        this.manualInput = new ManualInputImpl(reader, writer);
     }
 
     @Override
