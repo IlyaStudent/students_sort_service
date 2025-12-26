@@ -19,6 +19,7 @@ public class ManualInputImpl implements ManualInput {
 
     private final InputReader reader;
     private final OutputWriter writer;
+    private CustomList<Student> students;
 
     public ManualInputImpl(InputReader reader, OutputWriter writer) {
         this.reader = reader;
@@ -27,7 +28,7 @@ public class ManualInputImpl implements ManualInput {
 
     @Override
     public CustomList<Student> inputData(int count)  {
-        CustomList<Student> students = new CustomArrayList<>();
+        students = new CustomArrayList<>();
 
         for (int i = 0; i < count; i++) {
             Student student = readStudentData(i + 1);
@@ -89,7 +90,17 @@ public class ManualInputImpl implements ManualInput {
 
             RecordBookValidator validator = new RecordBookValidator();
             validator.validate(input);
-            return input;
+
+            boolean isDuplicate = false;
+            for (Student student : students) {
+                if (student.getRecordBookNumber().equals(input)) {
+                    System.out.printf("\nСтудент с номером зачетки %s уже существует, повторите ввод\n", input);
+                    isDuplicate = true;
+                }
+            }
+            if (!isDuplicate) {
+                return input;
+            }
         }
     }
 }
