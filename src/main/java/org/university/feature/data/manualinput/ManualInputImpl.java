@@ -4,11 +4,18 @@ import org.university.common.collection.CustomArrayList;
 import org.university.common.collection.CustomList;
 import org.university.common.exception.ValidationException;
 import org.university.common.model.Student;
+import org.university.common.util.StreamHelper;
 import org.university.common.validator.AverageScoreValidator;
 import org.university.common.validator.GroupNumberValidator;
 import org.university.common.validator.RecordBookValidator;
 import org.university.feature.ui.io.InputReader;
 import org.university.feature.ui.io.OutputWriter;
+
+import java.io.BufferedReader;
+import java.util.InputMismatchException;
+import java.util.Locale;
+import java.util.Scanner;
+import java.util.stream.IntStream;
 
 public class ManualInputImpl implements ManualInput {
 
@@ -22,14 +29,10 @@ public class ManualInputImpl implements ManualInput {
     }
 
     @Override
-    public CustomList<Student> inputData(int count)  {
-        students = new CustomArrayList<>();
-
-        for (int i = 0; i < count; i++) {
-            Student student = readStudentData(i + 1);
-            students.add(student);
-        }
-
+    public CustomList<Student> inputData(int count) throws InputMismatchException {
+        students = IntStream.range(0, count)
+                .mapToObj(i -> readStudentData(i + 1))
+                .collect(StreamHelper.toCustomList());
         return students;
     }
 
