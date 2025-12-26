@@ -10,11 +10,6 @@ import org.university.common.validator.RecordBookValidator;
 import org.university.feature.ui.io.InputReader;
 import org.university.feature.ui.io.OutputWriter;
 
-import java.io.BufferedReader;
-import java.util.InputMismatchException;
-import java.util.Locale;
-import java.util.Scanner;
-
 public class ManualInputImpl implements ManualInput {
 
     private final InputReader reader;
