@@ -28,7 +28,7 @@ class ManualDataLoaderTest {
     }
 
     @Test
-    void loadData_ShouldReturnStudents_WhenValidInput() throws Exception {
+    void loadData_ShouldReturnStudents_WhenValidInput() {
         int count = 2;
 
         testReader.addInput("CS-101")
@@ -61,7 +61,7 @@ class ManualDataLoaderTest {
     }
 
     @Test
-    void loadData_ShouldHandleDuplicateRecordBookNumbers() throws Exception {
+    void loadData_ShouldHandleDuplicateRecordBookNumbers() {
         int count = 2;
 
         testReader.addInput("CS-101")
@@ -83,7 +83,7 @@ class ManualDataLoaderTest {
     }
 
     @Test
-    void loadData_ShouldReturnEmptyList_WhenCountIsZero() throws Exception {
+    void loadData_ShouldReturnEmptyList_WhenCountIsZero() {
         int count = 0;
 
         CustomList<Student> result = manualDataLoader.loadData(count);
