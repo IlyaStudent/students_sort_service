@@ -2,128 +2,96 @@ package org.university.feature.data.loader;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.university.common.collection.CustomList;
-import org.university.common.exception.DataLoadException;
 import org.university.common.model.Student;
-import org.university.common.util.Constants;
-import org.university.feature.data.io.FileManager;
-import org.university.feature.data.io.JsonWriter;
-import org.university.feature.data.manualinput.ManualInput;
-import java.lang.reflect.Field;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import org.university.feature.ui.io.InputReader;
+import org.university.feature.ui.io.OutputWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.util.LinkedList;
+import java.util.Queue;
 
-@ExtendWith(MockitoExtension.class)
+import static org.junit.jupiter.api.Assertions.*;
+
 class ManualDataLoaderTest {
 
     private ManualDataLoader manualDataLoader;
-
-    @Mock
-    private ManualInput mockManualInput;
-
-    @Mock
-    private JsonWriter mockJsonWriter;
-
-    @Mock
-    private CustomList<Student> mockStudentList;
+    private TestInputReader testReader;
+    private TestOutputWriter testWriter;
 
     @BeforeEach
-    void setUp() throws Exception {
-        manualDataLoader = new ManualDataLoader();
-
-        Field manualInputField = ManualDataLoader.class.getDeclaredField("manualInput");
-        manualInputField.setAccessible(true);
-        manualInputField.set(manualDataLoader, mockManualInput);
-
-        Field jsonWriterField = ManualDataLoader.class.getDeclaredField("jsonWriter");
-        jsonWriterField.setAccessible(true);
-        jsonWriterField.set(manualDataLoader, mockJsonWriter);
+    void setUp() {
+        testReader = new TestInputReader();
+        testWriter = new TestOutputWriter();
+        manualDataLoader = new ManualDataLoader(testReader, testWriter);
     }
 
     @Test
-    void loadData_ShouldReturnStudentsAndWriteToFile() throws Exception {
-        int count = 5;
+    void loadData_ShouldReturnStudents_WhenValidInput() throws Exception {
+        int count = 2;
 
-        when(mockManualInput.inputData(count)).thenReturn(mockStudentList);
-        doNothing().when(mockJsonWriter).writeData(any(CustomList.class), anyString());
+        testReader.addInput("CS-101")
+                .addInput("4.5")
+                .addInput("2023-12345")
+                .addInput("IT-202")
+                .addInput("3.8")
+                .addInput("2023-54321");
 
-        String expectedFilePath = "data/students.json";
-        try (MockedStatic<FileManager> mockedFileManager = mockStatic(FileManager.class)) {
-            mockedFileManager.when(() -> FileManager.getJsonFilepath(Constants.JSON_FILENAME))
-                    .thenReturn(expectedFilePath);
+        CustomList<Student> result = manualDataLoader.loadData(count);
 
-            CustomList<Student> result = manualDataLoader.loadData(count);
+        assertNotNull(result);
+        assertEquals(count, result.size());
 
-            assertNotNull(result);
-            assertEquals(mockStudentList, result);
+        Student student1 = result.get(0);
+        assertEquals("CS-101", student1.getGroupNumber());
+        assertEquals(4.5, student1.getAverageScore(), 0.001);
+        assertEquals("2023-12345", student1.getRecordBookNumber());
 
-            verify(mockManualInput, times(1)).inputData(count);
-            verify(mockJsonWriter, times(1)).writeData(mockStudentList, expectedFilePath);
-        }
+        Student student2 = result.get(1);
+        assertEquals("IT-202", student2.getGroupNumber());
+        assertEquals(3.8, student2.getAverageScore(), 0.001);
+        assertEquals("2023-54321", student2.getRecordBookNumber());
+
+        String output = testWriter.getOutput();
+        assertTrue(output.contains("студента"));
+        assertTrue(output.contains("номер группы"));
+        assertTrue(output.contains("средний балл"));
+        assertTrue(output.contains("зачетной книжки"));
     }
 
     @Test
-    void loadData_ShouldPropagateException_WhenManualInputFails() throws Exception {
-        int count = 3;
-        DataLoadException expectedException = new DataLoadException("Input error");
+    void loadData_ShouldHandleDuplicateRecordBookNumbers() throws Exception {
+        int count = 2;
 
-        when(mockManualInput.inputData(count)).thenThrow(expectedException);
+        testReader.addInput("CS-101")
+                .addInput("4.5")
+                .addInput("2023-12345")
+                .addInput("IT-202")
+                .addInput("3.8")
+                .addInput("2023-12345")
+                .addInput("2023-54321");
 
-        DataLoadException actualException = assertThrows(DataLoadException.class,
-                () -> manualDataLoader.loadData(count)
-        );
+        CustomList<Student> result = manualDataLoader.loadData(count);
 
-        assertEquals(expectedException, actualException);
-        verify(mockManualInput, times(1)).inputData(count);
-        verify(mockJsonWriter, never()).writeData(any(), anyString());
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals("2023-54321", result.get(1).getRecordBookNumber());
+
+        String output = testWriter.getOutput();
+        assertTrue(output.contains("2023-12345"));
     }
 
     @Test
-    void loadData_ShouldPropagateException_WhenJsonWriterFails() throws Exception {
-        int count = 3;
-        DataLoadException jsonWriterException = new DataLoadException("Write error");
+    void loadData_ShouldReturnEmptyList_WhenCountIsZero() throws Exception {
+        int count = 0;
 
-        when(mockManualInput.inputData(count)).thenReturn(mockStudentList);
-        doThrow(jsonWriterException).when(mockJsonWriter).writeData(any(CustomList.class), anyString());
+        CustomList<Student> result = manualDataLoader.loadData(count);
 
-        try (MockedStatic<FileManager> mockedFileManager = mockStatic(FileManager.class)) {
-            mockedFileManager.when(() -> FileManager.getJsonFilepath(anyString()))
-                    .thenReturn("data/test.json");
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
 
-            DataLoadException actualException = assertThrows(DataLoadException.class,
-                    () -> manualDataLoader.loadData(count)
-            );
-
-            assertEquals(jsonWriterException, actualException);
-            verify(mockManualInput, times(1)).inputData(count);
-            verify(mockJsonWriter, times(1)).writeData(any(), anyString());
-        }
-    }
-
-    @Test
-    void loadData_ShouldUseCorrectFileNameAndPath() throws Exception {
-        int count = 5;
-        String expectedFileName = Constants.JSON_FILENAME;
-        String expectedFilePath = "data/" + expectedFileName;
-
-        when(mockManualInput.inputData(count)).thenReturn(mockStudentList);
-        doNothing().when(mockJsonWriter).writeData(any(CustomList.class), anyString());
-
-        try (MockedStatic<FileManager> mockedFileManager = mockStatic(FileManager.class)) {
-            mockedFileManager.when(() -> FileManager.getJsonFilepath(expectedFileName))
-                    .thenReturn(expectedFilePath);
-
-            manualDataLoader.loadData(count);
-
-            mockedFileManager.verify(() -> FileManager.getJsonFilepath(expectedFileName), times(1));
-            verify(mockJsonWriter, times(1)).writeData(mockStudentList, expectedFilePath);
-        }
+        assertTrue(testReader.getInputQueue().isEmpty());
     }
 
     @Test
@@ -133,53 +101,81 @@ class ManualDataLoaderTest {
         assertEquals(ManualDataLoader.class.getName(), loaderType);
     }
 
-    @Test
-    void loadData_ShouldHandleZeroCount() throws Exception {
-        int count = 0;
+    private static class TestInputReader implements InputReader {
+        private final Queue<String> inputQueue = new LinkedList<>();
 
-        when(mockManualInput.inputData(count)).thenReturn(mockStudentList);
-        doNothing().when(mockJsonWriter).writeData(any(CustomList.class), anyString());
+        public TestInputReader addInput(String input) {
+            inputQueue.add(input);
+            return this;
+        }
 
-        try (MockedStatic<FileManager> mockedFileManager = mockStatic(FileManager.class)) {
-            mockedFileManager.when(() -> FileManager.getJsonFilepath(Constants.JSON_FILENAME))
-                    .thenReturn("data/students.json");
+        public Queue<String> getInputQueue() {
+            return new LinkedList<>(inputQueue);
+        }
 
-            CustomList<Student> result = manualDataLoader.loadData(count);
+        @Override
+        public int readInt() {
+            String input = inputQueue.poll();
+            if (input == null) {
+                throw new RuntimeException("No more test input available");
+            }
+            try {
+                return Integer.parseInt(input.trim());
+            } catch (NumberFormatException e) {
+                throw new RuntimeException("Invalid integer input: " + input);
+            }
+        }
 
-            assertNotNull(result);
-            verify(mockManualInput, times(1)).inputData(count);
-            verify(mockJsonWriter, times(1)).writeData(mockStudentList, "data/students.json");
+        @Override
+        public String readGroupNumber() {
+            return readInput();
+        }
+
+        @Override
+        public String readInput() {
+            String input = inputQueue.poll();
+            if (input == null) {
+                throw new RuntimeException("No more test input available");
+            }
+            return input;
+        }
+
+        @Override
+        public void close() {
+            inputQueue.clear();
         }
     }
 
-    @Test
-    void loadData_ShouldPassCorrectStudentListToJsonWriter() throws Exception {
-        int count = 2;
+    private static class TestOutputWriter implements OutputWriter {
+        private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        private final PrintStream printStream = new PrintStream(outputStream, true, StandardCharsets.UTF_8);
 
-        CustomList<Student> testStudents = new org.university.common.collection.CustomArrayList<>();
-        testStudents.add(new Student.Builder()
-                .groupNumber("AB-123")
-                .averageScore(4.5)
-                .recordBookNumber("2023-12345")
-                .build());
-        testStudents.add(new Student.Builder()
-                .groupNumber("CD-456")
-                .averageScore(3.8)
-                .recordBookNumber("2023-54321")
-                .build());
+        public String getOutput() {
+            return outputStream.toString(StandardCharsets.UTF_8);
+        }
 
-        when(mockManualInput.inputData(count)).thenReturn(testStudents);
-        doNothing().when(mockJsonWriter).writeData(any(CustomList.class), anyString());
+        public void clearOutput() {
+            outputStream.reset();
+        }
 
-        try (MockedStatic<FileManager> mockedFileManager = mockStatic(FileManager.class)) {
-            mockedFileManager.when(() -> FileManager.getJsonFilepath(anyString()))
-                    .thenReturn("data/students.json");
+        @Override
+        public void println(String message) {
+            printStream.println(message);
+        }
 
-            CustomList<Student> result = manualDataLoader.loadData(count);
+        @Override
+        public void print(String text) {
+            printStream.print(text);
+        }
 
-            assertSame(testStudents, result); // Проверяем, что возвращается тот же список
+        @Override
+        public void printf(String format, Object... args) {
+            printStream.printf(format, args);
+        }
 
-            verify(mockJsonWriter, times(1)).writeData(eq(testStudents), anyString());
+        @Override
+        public void close() {
+            printStream.close();
         }
     }
 }

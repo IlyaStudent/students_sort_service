@@ -1,38 +1,48 @@
 package org.university.feature.data.manualinput;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.MockedConstruction;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.university.common.collection.CustomList;
 import org.university.common.model.Student;
-import org.university.common.validator.AverageScoreValidator;
-import java.util.InputMismatchException;
-import java.util.Scanner;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.*;
+import org.university.feature.ui.io.InputReader;
+import org.university.feature.ui.io.OutputWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.util.LinkedList;
+import java.util.Queue;
+import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(MockitoExtension.class)
 class ManualInputImplTest {
 
-    @Mock
-    private Scanner mockScanner;
-
     private ManualInputImpl manualInput;
+    private TestInputReader testReader;
+    private TestOutputWriter testWriter;
+    private PrintStream originalOut;
+    private InputStream originalIn;
 
     @BeforeEach
     void setUp() {
-        manualInput = new ManualInputImpl();
+        originalIn = System.in;
+        originalOut = System.out;
 
-        try {
-            var scannerField = ManualInputImpl.class.getDeclaredField("scanner");
-            scannerField.setAccessible(true);
-            scannerField.set(manualInput, mockScanner);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to set mock scanner", e);
+        testReader = new TestInputReader();
+        testWriter = new TestOutputWriter();
+        manualInput = new ManualInputImpl(testReader, testWriter);
+    }
+
+    @AfterEach
+    void tearDown() {
+        System.setIn(originalIn);
+        System.setOut(originalOut);
+
+        if (testReader != null) {
+            testReader.close();
+        }
+        if (testWriter != null) {
+            testWriter.close();
         }
     }
 
@@ -40,21 +50,15 @@ class ManualInputImplTest {
     void inputData_ShouldReturnCorrectNumberOfStudents() {
         int count = 3;
 
-        when(mockScanner.nextLine())
-                .thenReturn("AB-123")
-                .thenReturn("")
-                .thenReturn("2023-12345")
-                .thenReturn("CD-456")
-                .thenReturn("")
-                .thenReturn("2023-54321")
-                .thenReturn("EF-789")
-                .thenReturn("")
-                .thenReturn("2023-98765");
-
-        when(mockScanner.nextDouble())
-                .thenReturn(4.5)
-                .thenReturn(3.8)
-                .thenReturn(4.2);
+        testReader.addInput("AB-123")
+                .addInput("4.5")
+                .addInput("2023-12345")
+                .addInput("CD-456")
+                .addInput("3.8")
+                .addInput("2023-54321")
+                .addInput("EF-789")
+                .addInput("4.2")
+                .addInput("2023-98765");
 
         CustomList<Student> result = manualInput.inputData(count);
 
@@ -76,19 +80,42 @@ class ManualInputImplTest {
         assertEquals(4.2, student3.getAverageScore(), 0.001);
         assertEquals("2023-98765", student3.getRecordBookNumber());
 
-        verify(mockScanner, times(count * 3)).nextLine();
-        verify(mockScanner, times(count)).nextDouble();
+        String output = testWriter.getOutput();
+        assertTrue(output.contains("студента"));
+        assertTrue(output.contains("номер группы"));
+        assertTrue(output.contains("средний балл"));
+        assertTrue(output.contains("зачетной книжки"));
+    }
+
+    @Test
+    void inputData_ShouldHandleDuplicateRecordBookNumbers() {
+        int count = 2;
+
+        testReader.addInput("CS-101")
+                .addInput("4.5")
+                .addInput("2023-12345")
+                .addInput("IT-202")
+                .addInput("3.8")
+                .addInput("2023-12345")
+                .addInput("2023-54321");
+
+        CustomList<Student> result = manualInput.inputData(count);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals("2023-54321", result.get(1).getRecordBookNumber());
+
+        String output = testWriter.getOutput();
+        assertTrue(output.contains("2023-12345"));
     }
 
     @Test
     void inputData_ShouldHandleSingleStudent() {
         int count = 1;
 
-        when(mockScanner.nextLine())
-                .thenReturn("AB-123")
-                .thenReturn("2023-12345");
-
-        when(mockScanner.nextDouble()).thenReturn(4.5);
+        testReader.addInput("AB-123")
+                .addInput("4.5")
+                .addInput("2023-12345");
 
         CustomList<Student> result = manualInput.inputData(count);
 
@@ -105,59 +132,25 @@ class ManualInputImplTest {
     void inputData_ShouldConvertGroupNumberToUpperCase() {
         int count = 1;
 
-        when(mockScanner.nextLine())
-                .thenReturn("ab-123")
-                .thenReturn("2023-12345");
+        testReader.addInput("ab-123")
+                .addInput("4.5")
+                .addInput("2023-12345");
 
-        when(mockScanner.nextDouble()).thenReturn(4.5);
+        CustomList<Student> result = manualInput.inputData(count);
+
+        assertEquals("AB-123", result.get(0).getGroupNumber());
+    }
+
+    @Test
+    void inputData_ShouldReturnEmptyList_WhenCountIsZero() {
+        int count = 0;
 
         CustomList<Student> result = manualInput.inputData(count);
 
         assertNotNull(result);
-        assertEquals(1, result.size());
+        assertTrue(result.isEmpty());
 
-        Student student = result.get(0);
-        assertEquals("AB-123", student.getGroupNumber());
-    }
-
-    @Test
-    void inputData_ShouldTrimInputValues() {
-        int count = 1;
-
-        when(mockScanner.nextLine())
-                .thenReturn("  AB-123  ")
-                .thenReturn("  2023-12345  ");
-
-        when(mockScanner.nextDouble()).thenReturn(4.5);
-
-        CustomList<Student> result = manualInput.inputData(count);
-
-        assertNotNull(result);
-        assertEquals(1, result.size());
-
-        Student student = result.get(0);
-        assertEquals("AB-123", student.getGroupNumber());
-        assertEquals("2023-12345", student.getRecordBookNumber());
-    }
-
-    @Test
-    void readAverageScore_ShouldHandleInputMismatchException() {
-        try (MockedConstruction<AverageScoreValidator> mockedValidator =
-                     mockConstruction(AverageScoreValidator.class)) {
-
-            when(mockScanner.nextDouble())
-                    .thenThrow(new InputMismatchException())
-                    .thenReturn(4.5);
-
-            when(mockScanner.nextLine()).thenReturn("");
-
-            double result = invokePrivateMethod("readAverageScore", new Class<?>[0]);
-
-            assertEquals(4.5, result, 0.001);
-
-            verify(mockScanner, times(2)).nextDouble();
-            verify(mockScanner, atLeastOnce()).nextLine();
-        }
+        assertTrue(testReader.getInputQueue().isEmpty());
     }
 
     @Test
@@ -168,42 +161,119 @@ class ManualInputImplTest {
     }
 
     @Test
-    void readStudentData_ShouldCreateStudentWithValidData() {
-        int studentNumber = 1;
+    void inputData_ShouldPreserveOrderOfStudents() {
+        int count = 3;
 
-        when(mockScanner.nextLine())
-                .thenReturn("AB-123")
-                .thenReturn("")
-                .thenReturn("2023-12345");
+        testReader.addInput("AB-123")
+                .addInput("4.5")
+                .addInput("2023-00001")
+                .addInput("CD-456")
+                .addInput("3.8")
+                .addInput("2023-00002")
+                .addInput("EF-789")
+                .addInput("4.2")
+                .addInput("2023-00003");
 
-        when(mockScanner.nextDouble()).thenReturn(4.5);
+        CustomList<Student> result = manualInput.inputData(count);
 
-        Student result = invokeReadStudentData(studentNumber);
-
-        assertNotNull(result);
-        assertEquals("AB-123", result.getGroupNumber());
-        assertEquals(4.5, result.getAverageScore(), 0.001);
-        assertEquals("2023-12345", result.getRecordBookNumber());
+        assertEquals(3, result.size());
+        assertEquals("AB-123", result.get(0).getGroupNumber());
+        assertEquals("CD-456", result.get(1).getGroupNumber());
+        assertEquals("EF-789", result.get(2).getGroupNumber());
     }
 
-    private Student invokeReadStudentData(int studentNumber) {
-        try {
-            var method = ManualInputImpl.class.getDeclaredMethod("readStudentData", int.class);
-            method.setAccessible(true);
-            return (Student) method.invoke(manualInput, studentNumber);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to invoke readStudentData", e);
+    @Test
+    void inputData_ShouldCallWriterMethodsCorrectly() {
+        int count = 1;
+
+        testReader.addInput("AB-123")
+                .addInput("4.5")
+                .addInput("2023-12345");
+
+        manualInput.inputData(count);
+
+        String output = testWriter.getOutput();
+        assertTrue(output.contains("студента"));
+        assertTrue(output.contains("номер группы"));
+        assertTrue(output.contains("средний балл"));
+        assertTrue(output.contains("зачетной книжки"));
+    }
+
+    private static class TestInputReader implements InputReader {
+        private final Queue<String> inputQueue = new LinkedList<>();
+
+        public TestInputReader addInput(String input) {
+            inputQueue.add(input);
+            return this;
+        }
+
+        public Queue<String> getInputQueue() {
+            return new LinkedList<>(inputQueue);
+        }
+
+        @Override
+        public int readInt() {
+            String input = inputQueue.poll();
+            if (input == null) {
+                throw new RuntimeException("No more test input available");
+            }
+            try {
+                return Integer.parseInt(input.trim());
+            } catch (NumberFormatException e) {
+                throw new RuntimeException("Invalid integer input: " + input);
+            }
+        }
+
+        @Override
+        public String readGroupNumber() {
+            return readInput().toUpperCase();
+        }
+
+        @Override
+        public String readInput() {
+            String input = inputQueue.poll();
+            if (input == null) {
+                throw new RuntimeException("No more test input available");
+            }
+            return input;
+        }
+
+        @Override
+        public void close() {
+            inputQueue.clear();
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private <T> T invokePrivateMethod(String methodName, Class<?>[] paramTypes, Object... args) {
-        try {
-            var method = ManualInputImpl.class.getDeclaredMethod(methodName, paramTypes);
-            method.setAccessible(true);
-            return (T) method.invoke(manualInput, args);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to invoke private method: " + methodName, e);
+    private static class TestOutputWriter implements OutputWriter {
+        private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        private final PrintStream printStream = new PrintStream(outputStream, true, StandardCharsets.UTF_8);
+
+        public String getOutput() {
+            return outputStream.toString(StandardCharsets.UTF_8);
+        }
+
+        public void clearOutput() {
+            outputStream.reset();
+        }
+
+        @Override
+        public void println(String message) {
+            printStream.println(message);
+        }
+
+        @Override
+        public void print(String text) {
+            printStream.print(text);
+        }
+
+        @Override
+        public void printf(String format, Object... args) {
+            printStream.printf(format, args);
+        }
+
+        @Override
+        public void close() {
+            printStream.close();
         }
     }
 }

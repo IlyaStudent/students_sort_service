@@ -73,7 +73,65 @@ class DataValidatorTest {
         );
         assertEquals("Student cannot be null", exception.getMessage());
     }
+
+    @Test
+    void validateStudentList_ShouldRemoveDuplicateRecordBookNumbers() {
+        CustomList<Student> students = new CustomArrayList<>();
+
+        Student student1 = new Student.Builder()
+                .groupNumber("AB-123")
+                .averageScore(4.5)
+                .recordBookNumber("1234-56789")
+                .build();
+
+        Student student2 = new Student.Builder()
+                .groupNumber("CD-456")
+                .averageScore(3.8)
+                .recordBookNumber("1234-56789")
+                .build();
+
+        Student student3 = new Student.Builder()
+                .groupNumber("EF-789")
+                .averageScore(4.2)
+                .recordBookNumber("9876-54321")
+                .build();
+
+        Student student4 = new Student.Builder()
+                .groupNumber("GH-012")
+                .averageScore(3.5)
+                .recordBookNumber("1234-56789")
+                .build();
+
+        students.add(student1);
+        students.add(student2);
+        students.add(student3);
+        students.add(student4);
+
+        dataValidator.validateStudentList(students);
+
+        assertEquals(2, students.size());
+
+        boolean hasStudent1 = false;
+        boolean hasStudent3 = false;
+
+        for (Student student : students) {
+            if (student.getRecordBookNumber().equals("1234-56789")) {
+                hasStudent1 = true;
+                assertEquals("AB-123", student.getGroupNumber());
+                assertEquals(4.5, student.getAverageScore(), 0.001);
+            }
+            if (student.getRecordBookNumber().equals("9876-54321")) {
+                hasStudent3 = true;
+                assertEquals("EF-789", student.getGroupNumber());
+                assertEquals(4.2, student.getAverageScore(), 0.001);
+            }
+        }
+
+        assertTrue(hasStudent1);
+        assertTrue(hasStudent3);
+    }
 }
+
 
 class AverageScoreValidatorTest {
 

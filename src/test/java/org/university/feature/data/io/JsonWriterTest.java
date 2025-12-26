@@ -55,11 +55,11 @@ class JsonWriterTest {
 
         jsonWriter.writeData(students, filePath.toString());
 
-        assertTrue(Files.exists(filePath), "Файл должен быть создан");
+        assertTrue(Files.exists(filePath));
 
         String content = Files.readString(filePath);
         JsonArray jsonArray = JsonParser.parseString(content).getAsJsonArray();
-        assertEquals(3, jsonArray.size(), "В файле должно быть 3 студента");
+        assertEquals(3, jsonArray.size());
     }
 
     @Test
@@ -88,57 +88,7 @@ class JsonWriterTest {
 
         String content = Files.readString(filePath);
         JsonArray jsonArray = JsonParser.parseString(content).getAsJsonArray();
-        assertEquals(4, jsonArray.size(), "В файле должно быть 4 студента (2 старых + 2 новых)");
-    }
-
-    @Test
-    void writeData_ShouldSkipDuplicateStudents() throws Exception {
-        Path filePath = tempDir.resolve("duplicates.json");
-
-        String initialJson = """
-            [
-                {
-                    "groupNumber": "AB-100",
-                    "averageScore": 4.0,
-                    "recordBookNumber": "2020-10000"
-                }
-            ]
-            """;
-        Files.writeString(filePath, initialJson);
-
-        CustomList<Student> students = new CustomArrayList<>();
-
-        students.add(new Student.Builder()
-                .groupNumber("AB-100")
-                .averageScore(4.0)
-                .recordBookNumber("2020-10000")
-                .build());
-
-        students.add(new Student.Builder()
-                .groupNumber("CD-200")
-                .averageScore(3.5)
-                .recordBookNumber("2020-10001")
-                .build());
-
-        java.io.ByteArrayOutputStream outContent = new java.io.ByteArrayOutputStream();
-        java.io.PrintStream originalOut = System.out;
-        System.setOut(new java.io.PrintStream(outContent));
-
-        try {
-            jsonWriter.writeData(students, filePath.toString());
-
-            String content = Files.readString(filePath);
-            JsonArray jsonArray = JsonParser.parseString(content).getAsJsonArray();
-            assertEquals(2, jsonArray.size(), "Должен быть добавлен только 1 новый студент");
-
-            String consoleOutput = outContent.toString();
-            assertTrue(consoleOutput.contains("Duplicate student skipped"),
-                    "Должно быть сообщение о пропуске дубликата");
-            assertTrue(consoleOutput.contains("1 students were added"),
-                    "Должно быть сообщение о добавлении 1 студента");
-        } finally {
-            System.setOut(originalOut);
-        }
+        assertEquals(4, jsonArray.size());
     }
 
     @Test
