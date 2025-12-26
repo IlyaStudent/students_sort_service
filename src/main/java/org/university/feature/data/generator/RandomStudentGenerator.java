@@ -1,10 +1,12 @@
 package org.university.feature.data.generator;
 
-import org.university.common.collection.CustomArrayList;
 import org.university.common.collection.CustomList;
 import org.university.common.model.Student;
 import org.university.common.util.Constants;
+import org.university.common.util.StreamHelper;
+
 import java.util.Random;
+import java.util.stream.IntStream;
 
 public class RandomStudentGenerator implements DataGenerator{
 
@@ -16,14 +18,9 @@ public class RandomStudentGenerator implements DataGenerator{
 
     @Override
     public CustomList<Student> generateStudents(int count) {
-        CustomList<Student> students = new CustomArrayList<>();
-
-        for (int i = 0; i < count; i++) {
-            Student student = generateStudent();
-            students.add(student);
-        }
-
-        return students;
+        return IntStream.range(0, count)
+                .mapToObj(i -> generateStudent())
+                .collect(StreamHelper.toCustomList());
     }
 
     private Student generateStudent() {

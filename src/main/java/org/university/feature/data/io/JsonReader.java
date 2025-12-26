@@ -1,12 +1,17 @@
 package org.university.feature.data.io;
 
-import com.google.gson.*;
-import org.university.common.collection.CustomArrayList;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import org.university.common.collection.CustomList;
 import org.university.common.exception.DataLoadException;
 import org.university.common.model.Student;
+import org.university.common.util.StreamHelper;
+
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.stream.StreamSupport;
 
 public class JsonReader {
 
@@ -16,42 +21,26 @@ public class JsonReader {
         }
 
         JsonArray jsonArray = readFromFile(fileName, count);
-        CustomList<Student> students = new CustomArrayList<>();
 
         try {
-            int loadedCount = 0;
-            for (JsonElement element : jsonArray) {
-                if (loadedCount >= count) {
-                    break;
-                }
-                JsonObject jsonObject = element.getAsJsonObject();
-
-                if (!jsonObject.has("groupNumber") ||
-                        !jsonObject.has("averageScore") ||
-                        !jsonObject.has("recordBookNumber")) {
-                    continue;
-                }
-
-                String groupNumber = jsonObject.get("groupNumber").getAsString();
-                double averageScore = jsonObject.get("averageScore").getAsDouble();
-                String recordBookNumber = jsonObject.get("recordBookNumber").getAsString();
-
-                Student student = new Student.Builder()
-                        .groupNumber(groupNumber)
-                        .averageScore(averageScore)
-                        .recordBookNumber(recordBookNumber)
-                        .build();
-
-                students.add(student);
-                loadedCount++;
-            }
+            return StreamSupport.stream(jsonArray.spliterator(), false)
+                    .limit(count)
+                    .map(JsonElement::getAsJsonObject)
+                    .filter(jsonObject -> jsonObject.has("groupNumber") &&
+                            jsonObject.has("averageScore") &&
+                            jsonObject.has("recordBookNumber"))
+                    .map(jsonObject -> new Student.Builder()
+                            .groupNumber(jsonObject.get("groupNumber").getAsString())
+                            .averageScore(jsonObject.get("averageScore").getAsDouble())
+                            .recordBookNumber(jsonObject.get("recordBookNumber").getAsString())
+                            .build())
+                    .collect(StreamHelper.toCustomList());
 
         } catch (JsonSyntaxException e) {
             throw new DataLoadException("JSON syntax error", e);
         } catch (Exception e) {
             throw new DataLoadException("JSON data load error", e);
         }
-        return students;
     }
 
     private JsonArray readFromFile(String fileName, int count) {
