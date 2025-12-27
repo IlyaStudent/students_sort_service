@@ -35,11 +35,6 @@ public class JsonWriter {
             for (Student student : students) {
                 JsonObject studentJson = createStudentJson(student);
 
-                if (isDuplicate(existingStudents, studentJson)) {
-//                    System.out.printf("Пропущено повторное добавление записи: %s%n", student);
-                    continue;
-                }
-
                 existingStudents.add(studentJson);
                 addedCount++;
             }
@@ -84,18 +79,5 @@ public class JsonWriter {
         jsonObject.addProperty("averageScore", student.getAverageScore());
         jsonObject.addProperty("recordBookNumber", student.getRecordBookNumber());
         return jsonObject;
-    }
-
-    private boolean isDuplicate(JsonArray array, JsonObject newStudent) {
-        for (int i = 0; i < array.size(); i++) {
-            JsonObject existing = array.get(i).getAsJsonObject();
-
-            if (existing.get("groupNumber").getAsString().equals(newStudent.get("groupNumber").getAsString()) &&
-                    existing.get("averageScore").getAsDouble() == newStudent.get("averageScore").getAsDouble() &&
-                    existing.get("recordBookNumber").getAsString().equals(newStudent.get("recordBookNumber").getAsString())) {
-                return true;
-            }
-        }
-        return false;
     }
 }

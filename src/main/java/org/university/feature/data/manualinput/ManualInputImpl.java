@@ -4,17 +4,13 @@ import org.university.common.collection.CustomArrayList;
 import org.university.common.collection.CustomList;
 import org.university.common.exception.ValidationException;
 import org.university.common.model.Student;
-import org.university.common.util.StreamHelper;
 import org.university.common.validator.AverageScoreValidator;
 import org.university.common.validator.GroupNumberValidator;
 import org.university.common.validator.RecordBookValidator;
 import org.university.feature.ui.io.InputReader;
 import org.university.feature.ui.io.OutputWriter;
 
-import java.io.BufferedReader;
 import java.util.InputMismatchException;
-import java.util.Locale;
-import java.util.Scanner;
 import java.util.stream.IntStream;
 
 public class ManualInputImpl implements ManualInput {
@@ -29,9 +25,12 @@ public class ManualInputImpl implements ManualInput {
 
     @Override
     public CustomList<Student> inputData(int count) throws InputMismatchException {
-        return IntStream.range(0, count)
-                .mapToObj(i -> readStudentData(i + 1))
-                .collect(StreamHelper.toCustomList());
+        CustomList<Student> students = new CustomArrayList<>();
+
+        IntStream.range(0, count)
+                .forEach(i -> students.add(readStudentData(i + 1, students)));
+
+        return students;
     }
 
     @Override
@@ -39,12 +38,12 @@ public class ManualInputImpl implements ManualInput {
         return this.getClass().getName();
     }
 
-    private Student readStudentData(int studentNumber) {
+    private Student readStudentData(int studentNumber, CustomList<Student> existingStudents) {
         writer.printf("\nПожалуйста введите данные для студента под номером #%d:%n", studentNumber);
 
         String groupNumber = readGroupNumber();
         double averageScore = readAverageScore();
-        String recordBookNumber = readRecordBookNumber();
+        String recordBookNumber = readRecordBookNumber(existingStudents);
 
         return new Student.Builder()
                 .groupNumber(groupNumber)
@@ -79,14 +78,26 @@ public class ManualInputImpl implements ManualInput {
         }
     }
 
-    private String readRecordBookNumber() {
+    private String readRecordBookNumber(CustomList<Student> existingStudents) {
         while (true) {
             writer.print("Введите номер зачетной книжки (формат: YYYY-NNNNN, пример: 2023-12345): ");
             String input = reader.readInput();
 
             RecordBookValidator validator = new RecordBookValidator();
             validator.validate(input);
-            return input;
+
+            boolean isDuplicate = false;
+            for (Student student : existingStudents) {
+                if (student.getRecordBookNumber().equals(input)) {
+                    writer.printf("\nСтудент с номером зачетки %s уже существует, повторите ввод\n", input);
+                    isDuplicate = true;
+                    break;
+                }
+            }
+
+            if (!isDuplicate) {
+                return input;
+            }
         }
     }
 }
