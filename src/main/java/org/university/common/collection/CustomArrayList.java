@@ -33,11 +33,15 @@ public class CustomArrayList<T> implements CustomList<T> {
     }
 
     @Override
-    public void add(int i, T element) {
-        if (i == -1) {
-            i = size;
-        }
+    public void add(T element) {
+        ensureCapacityInternal(size + 1);
+        elementData[size] = element;
+        size++;
+        modCount++;
+    }
 
+    @Override
+    public void add(int i, T element) {
         if (i < 0 || i > size) {
             throw new IndexOutOfBoundsException(outOfBoundsMsg(i));
         }
@@ -215,7 +219,6 @@ public class CustomArrayList<T> implements CustomList<T> {
 
         @Override
         public boolean hasNext() {
-            checkForComodification();
             return cursor != size;
         }
 

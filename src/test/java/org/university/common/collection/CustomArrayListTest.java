@@ -12,8 +12,8 @@ class CustomArrayListTest {
     @Test
     void addAndGetShouldWork() {
         CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
-        list.add(-1, "B");
+        list.add("A");
+        list.add("B");
 
         Assertions.assertEquals(2, list.size());
         Assertions.assertEquals("A", list.get(0));
@@ -23,8 +23,8 @@ class CustomArrayListTest {
     @Test
     void setShouldReplaceElement() {
         CustomList<Integer> list = new CustomArrayList<>();
-        list.add(-1, 1);
-        list.add(-1, 2);
+        list.add(1);
+        list.add(2);
 
         list.set(1, 999);
 
@@ -35,9 +35,9 @@ class CustomArrayListTest {
     @Test
     void removeShouldShiftElements() {
         CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
-        list.add(-1, "B");
-        list.add(-1, "C");
+        list.add("A");
+        list.add("B");
+        list.add("C");
 
         String removed = list.remove(1);
 
@@ -52,7 +52,7 @@ class CustomArrayListTest {
         CustomList<String> list = new CustomArrayList<>();
         Assertions.assertTrue(list.isEmpty());
 
-        list.add(-1, "X");
+        list.add("X");
         Assertions.assertFalse(list.isEmpty());
 
         list.clear();
@@ -63,9 +63,9 @@ class CustomArrayListTest {
     @Test
     void streamShouldReturnAllElementsInOrder() {
         CustomList<Integer> list = new CustomArrayList<>();
-        list.add(-1, 3);
-        list.add(-1, 1);
-        list.add(-1, 2);
+        list.add(3);
+        list.add(1);
+        list.add(2);
 
         List<Integer> result = list.stream().collect(Collectors.toList());
 
@@ -75,8 +75,8 @@ class CustomArrayListTest {
     @Test
     void toArrayShouldReturnArrayWithSameElements() {
         CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
-        list.add(-1, "B");
+        list.add("A");
+        list.add("B");
 
         String[] arr = list.toArray(new String[0]);
 
@@ -89,7 +89,7 @@ class CustomArrayListTest {
     void shouldGrowCapacityOnManyAdds() {
         CustomList<Integer> list = new CustomArrayList<>(1);
         for (int i = 0; i < 100; i++) {
-            list.add(-1, i);
+            list.add(i);
         }
 
         Assertions.assertEquals(100, list.size());
@@ -100,7 +100,7 @@ class CustomArrayListTest {
     @Test
     void getShouldThrowOnBadIndex() {
         CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
+        list.add("A");
 
         Assertions.assertThrows(IndexOutOfBoundsException.class, () -> list.get(1));
         Assertions.assertThrows(IndexOutOfBoundsException.class, () -> list.get(-1));
@@ -115,8 +115,8 @@ class CustomArrayListTest {
     @Test
     void addAtIndexShouldInsertElement() {
         CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
-        list.add(-1, "C");
+        list.add("A");
+        list.add("C");
         list.add(1, "B");
 
         Assertions.assertEquals(3, list.size());
@@ -128,7 +128,7 @@ class CustomArrayListTest {
     @Test
     void addAtIndexAtBeginningShouldWork() {
         CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "B");
+        list.add("B");
         list.add(0, "A");
 
         Assertions.assertEquals(2, list.size());
@@ -139,7 +139,7 @@ class CustomArrayListTest {
     @Test
     void addAtIndexAtEndShouldWork() {
         CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
+        list.add("A");
         list.add(1, "B");
 
         Assertions.assertEquals(2, list.size());
@@ -150,16 +150,16 @@ class CustomArrayListTest {
     @Test
     void addAtIndexShouldThrowOnBadIndex() {
         CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
+        list.add("A");
 
         Assertions.assertThrows(IndexOutOfBoundsException.class, () -> list.add(2, "B"));
-        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> list.add(-1, "B"));
+        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> list.add(-2, "B"));
     }
 
     @Test
     void setShouldThrowOnBadIndex() {
         CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
+        list.add("A");
 
         Assertions.assertThrows(IndexOutOfBoundsException.class, () -> list.set(1, "B"));
         Assertions.assertThrows(IndexOutOfBoundsException.class, () -> list.set(-1, "B"));
@@ -168,9 +168,9 @@ class CustomArrayListTest {
     @Test
     void removeLastElementShouldWork() {
         CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
-        list.add(-1, "B");
-        list.add(-1, "C");
+        list.add("A");
+        list.add("B");
+        list.add("C");
 
         String removed = list.remove(2);
 
@@ -183,9 +183,9 @@ class CustomArrayListTest {
     @Test
     void removeFirstElementShouldWork() {
         CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
-        list.add(-1, "B");
-        list.add(-1, "C");
+        list.add("A");
+        list.add("B");
+        list.add("C");
 
         String removed = list.remove(0);
 
@@ -198,9 +198,9 @@ class CustomArrayListTest {
     @Test
     void containsShouldReturnCorrectResult() {
         CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
-        list.add(-1, "B");
-        list.add(-1, "C");
+        list.add("A");
+        list.add("B");
+        list.add("C");
 
         Assertions.assertTrue(list.contains("A"));
         Assertions.assertTrue(list.contains("B"));
@@ -212,9 +212,9 @@ class CustomArrayListTest {
     @Test
     void containsWithNullShouldWork() {
         CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
-        list.add(-1, null);
-        list.add(-1, "C");
+        list.add("A");
+        list.add(null);
+        list.add("C");
 
         Assertions.assertTrue(list.contains(null));
         Assertions.assertTrue(list.contains("A"));
@@ -224,10 +224,10 @@ class CustomArrayListTest {
     @Test
     void indexOfShouldReturnCorrectIndex() {
         CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
-        list.add(-1, "B");
-        list.add(-1, "A");
-        list.add(-1, "C");
+        list.add("A");
+        list.add("B");
+        list.add("A");
+        list.add("C");
 
         Assertions.assertEquals(0, list.indexOf("A"));
         Assertions.assertEquals(1, list.indexOf("B"));
@@ -239,10 +239,10 @@ class CustomArrayListTest {
     @Test
     void indexOfWithNullShouldWork() {
         CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
-        list.add(-1, null);
-        list.add(-1, "B");
-        list.add(-1, null);
+        list.add("A");
+        list.add(null);
+        list.add("B");
+        list.add(null);
 
         Assertions.assertEquals(1, list.indexOf(null));
         Assertions.assertEquals(0, list.indexOf("A"));
@@ -251,10 +251,10 @@ class CustomArrayListTest {
     @Test
     void lastIndexOfShouldReturnCorrectIndex() {
         CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
-        list.add(-1, "B");
-        list.add(-1, "A");
-        list.add(-1, "C");
+        list.add("A");
+        list.add("B");
+        list.add("A");
+        list.add("C");
 
         Assertions.assertEquals(2, list.lastIndexOf("A"));
         Assertions.assertEquals(1, list.lastIndexOf("B"));
@@ -266,10 +266,10 @@ class CustomArrayListTest {
     @Test
     void lastIndexOfWithNullShouldWork() {
         CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
-        list.add(-1, null);
-        list.add(-1, "B");
-        list.add(-1, null);
+        list.add("A");
+        list.add(null);
+        list.add("B");
+        list.add(null);
 
         Assertions.assertEquals(3, list.lastIndexOf(null));
         Assertions.assertEquals(2, list.lastIndexOf("B"));
@@ -278,9 +278,9 @@ class CustomArrayListTest {
     @Test
     void toArrayWithTypeShouldWork() {
         CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
-        list.add(-1, "B");
-        list.add(-1, "C");
+        list.add("A");
+        list.add("B");
+        list.add("C");
 
         String[] array = list.toArray(new String[0]);
         Assertions.assertEquals(3, array.length);
@@ -290,9 +290,9 @@ class CustomArrayListTest {
     @Test
     void iteratorShouldTraverseAllElements() {
         CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
-        list.add(-1, "B");
-        list.add(-1, "C");
+        list.add("A");
+        list.add("B");
+        list.add("C");
 
         StringBuilder sb = new StringBuilder();
         for (String s : list) {
@@ -319,9 +319,9 @@ class CustomArrayListTest {
     @Test
     void iteratorRemoveShouldWork() {
         CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
-        list.add(-1, "B");
-        list.add(-1, "C");
+        list.add("A");
+        list.add("B");
+        list.add("C");
 
         var iterator = list.iterator();
         iterator.next(); // A
@@ -335,7 +335,7 @@ class CustomArrayListTest {
     @Test
     void iteratorRemoveWithoutNextShouldThrow() {
         CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
+        list.add("A");
 
         var iterator = list.iterator();
         Assertions.assertThrows(IllegalStateException.class, iterator::remove);
@@ -344,7 +344,7 @@ class CustomArrayListTest {
     @Test
     void iteratorDoubleRemoveShouldThrow() {
         CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
+        list.add("A");
 
         var iterator = list.iterator();
         iterator.next();
@@ -356,7 +356,7 @@ class CustomArrayListTest {
     void streamOperationsShouldWork() {
         CustomList<Integer> list = new CustomArrayList<>();
         for (int i = 0; i < 10; i++) {
-            list.add(-1, i);
+            list.add(i);
         }
 
         List<Integer> result = list.stream()
@@ -373,7 +373,7 @@ class CustomArrayListTest {
         int count = 10000;
 
         for (int i = 0; i < count; i++) {
-            list.add(-1, i);
+            list.add(i);
         }
 
         Assertions.assertEquals(count, list.size());
@@ -385,14 +385,14 @@ class CustomArrayListTest {
     @Test
     void clearShouldRemoveAllElements() {
         CustomList<String> list = new CustomArrayList<>();
-        list.add(-1, "A");
-        list.add(-1, "B");
-        list.add(-1, "C");
+        list.add("A");
+        list.add("B");
+        list.add("C");
 
         list.clear();
         Assertions.assertEquals(0, list.size());
         Assertions.assertTrue(list.isEmpty());
-        list.add(-1, "D");
+        list.add("D");
         Assertions.assertEquals(1, list.size());
         Assertions.assertEquals("D", list.get(0));
     }
