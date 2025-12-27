@@ -2,7 +2,7 @@ package org.university.common.model;
 
 import java.util.Objects;
 
-public class Student {
+public class Student implements Comparable<Student> {
     private final String groupNumber;
     private final double averageScore;
     private final String recordBookNumber;
@@ -11,6 +11,21 @@ public class Student {
         groupNumber = builder.groupNumber;
         averageScore = builder.averageScore;
         recordBookNumber = builder.recordBookNumber;
+    }
+
+    @Override
+    public int compareTo(Student other) {
+        int result = this.groupNumber.compareTo(other.groupNumber);
+        if (result != 0) {
+            return result;
+        }
+
+        result = Double.compare(this.averageScore, other.averageScore);
+        if (result != 0) {
+            return result;
+        }
+
+        return this.recordBookNumber.compareTo(other.recordBookNumber);
     }
 
     public static class Builder {
@@ -52,11 +67,9 @@ public class Student {
 
     @Override
     public String toString() {
-        return "Student{" +
-                "groupNumber='" + groupNumber + '\'' +
-                ", averageScore=" + averageScore +
-                ", recordBookNumber='" + recordBookNumber + '\'' +
-                '}';
+        return String.format(
+                "Студент - { Номер группы - [%s], Средний балл - [%.2f], Номер зачетной книжки - [%s] }",
+                groupNumber, averageScore, recordBookNumber);
     }
 
     @Override
@@ -64,9 +77,9 @@ public class Student {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Student student = (Student) o;
-        return Double.compare(averageScore, student.averageScore) == 0 &&
-                Objects.equals(groupNumber, student.groupNumber) &&
-                Objects.equals(recordBookNumber, student.recordBookNumber);
+        return Double.compare(averageScore, student.averageScore) == 0
+                && Objects.equals(groupNumber, student.groupNumber)
+                && Objects.equals(recordBookNumber, student.recordBookNumber);
     }
 
     @Override
