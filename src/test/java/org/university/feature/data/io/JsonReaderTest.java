@@ -34,7 +34,7 @@ class JsonReaderTest {
     }
 
     @Test
-    void parseStudents_ShouldReturnCorrectNumberOfStudents() throws Exception {
+    void parseStudents_ShouldReturnCorrectNumberOfStudents() {
         String fileName = "students.json";
         int count = 3;
 
@@ -70,7 +70,7 @@ class JsonReaderTest {
     }
 
     @Test
-    void parseStudents_ShouldThrowException_WhenJsonSyntaxInvalid() throws Exception {
+    void parseStudents_ShouldThrowException_WhenJsonSyntaxInvalid() {
         String fileName = "invalid.json";
         int count = 5;
 
@@ -97,9 +97,9 @@ class JsonReaderTest {
     }
 
     @Test
-    void parseStudents_ShouldSkipInvalidObjects() throws Exception {
+    void parseStudents_ShouldSkipInvalidObjects() {
         String fileName = "students.json";
-        int count = 2;
+        int count = 4;
 
         JsonArray jsonArray = createMixedJsonArray();
 
@@ -113,7 +113,7 @@ class JsonReaderTest {
             CustomList<Student> result = jsonReader.parseStudents(fileName, count);
 
             assertNotNull(result);
-            assertEquals(2, result.size()); // Должны загрузиться только 2 валидных
+            assertEquals(2, result.size());
         }
     }
 
