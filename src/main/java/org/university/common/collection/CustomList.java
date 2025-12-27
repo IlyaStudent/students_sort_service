@@ -4,6 +4,8 @@ import java.util.stream.Stream;
 
 public interface CustomList<T> extends Iterable<T> {
 
+    void add(T element);
+
     void add(int i, T element);
 
     T get(int index);
