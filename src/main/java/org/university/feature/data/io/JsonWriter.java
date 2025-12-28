@@ -31,16 +31,15 @@ public class JsonWriter {
         try {
             JsonArray existingStudents = readOrCreateJsonArray(filePath);
 
-            int addedCount = 0;
             for (Student student : students) {
                 JsonObject studentJson = createStudentJson(student);
 
-                existingStudents.add(studentJson);
-                addedCount++;
+                if (!isDuplicate(existingStudents, studentJson)) {
+                    existingStudents.add(studentJson);
+                }
             }
 
             writeJsonArray(existingStudents, filePath);
-            System.out.printf("Количество записей успешно записанных в файл: %d.\n", addedCount);
 
         } catch (IOException e) {
             throw new DataLoadException(
@@ -79,5 +78,19 @@ public class JsonWriter {
         jsonObject.addProperty("averageScore", student.getAverageScore());
         jsonObject.addProperty("recordBookNumber", student.getRecordBookNumber());
         return jsonObject;
+    }
+
+    private boolean isDuplicate(JsonArray array, JsonObject newStudent) {
+        String newRecordBookNumber = newStudent.get("recordBookNumber").getAsString();
+
+        for (int i = 0; i < array.size(); i++) {
+            JsonObject existing = array.get(i).getAsJsonObject();
+            String existingRecordBookNumber = existing.get("recordBookNumber").getAsString();
+
+            if (existingRecordBookNumber.equals(newRecordBookNumber)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

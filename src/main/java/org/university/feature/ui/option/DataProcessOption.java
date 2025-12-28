@@ -2,13 +2,11 @@ package org.university.feature.ui.option;
 
 import org.university.common.Constants;
 
-import java.util.Optional;
-
 public enum DataProcessOption implements CodeOption {
-    FIND_STUDENT(1, "Поиск студентов по номеру группы"),
-    SORT_STUDENTS(2, "Отсортировать студентов"),
-    SHOW_DATA_TO_USER(3, "Отобразить данные студентов"),
-    SAVE_DATA_TO_FILE(4, "Записать данные студентов в файл"),
+    FIND_STUDENT(1, Constants.DESCRIPTION_FIND_STUDENT),
+    SORT_STUDENTS(2, Constants.DESCRIPTION_SORT_STUDENTS),
+    SHOW_DATA_TO_USER(3, Constants.DESCRIPTION_SHOW_DATA),
+    SAVE_DATA_TO_FILE(4, Constants.DESCRIPTION_SAVE_DATA),
     BACK(5, Constants.DESCRIPTION_OPTION_BACK),
     EXIT(6, Constants.DESCRIPTION_OPTION_EXIT);
 
@@ -30,7 +28,4 @@ public enum DataProcessOption implements CodeOption {
         return description;
     }
 
-    public static Optional<DataProcessOption> fromCode(int code) {
-        return CodeOption.fromCode(code, values());
-    }
 }

@@ -1,5 +1,6 @@
 package org.university.common.validator;
 
+import org.university.common.Constants;
 import org.university.common.exception.ValidationException;
 
 public class GroupNumberValidator implements Validator<String> {
@@ -8,12 +9,12 @@ public class GroupNumberValidator implements Validator<String> {
     public void validate(String groupNumber) {
         if (groupNumber == null || groupNumber.isEmpty()) {
             throw new ValidationException(
-                    "Group number cannot be empty"
+                    Constants.ERROR_GROUP_NUMBER_EMPTY
             );
         }
-        if (!groupNumber.matches("[A-Z]{2}-\\d{3}")) {
+        if (!groupNumber.matches(Constants.PATTERN_GROUP_NUMBER)) {
             throw new ValidationException(
-                    "Group number field value is invalid ",
+                    Constants.ERROR_GROUP_NUMBER_INVALID,
                     "groupNumber",
                     groupNumber
             );

@@ -6,6 +6,7 @@ import org.university.common.collection.CustomList;
 import org.university.common.model.Student;
 import org.university.feature.ui.io.InputReader;
 import org.university.feature.ui.io.OutputWriter;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -139,11 +140,6 @@ class ManualDataLoaderTest {
             }
             return input;
         }
-
-        @Override
-        public void close() {
-            inputQueue.clear();
-        }
     }
 
     private static class TestOutputWriter implements OutputWriter {
@@ -171,11 +167,6 @@ class ManualDataLoaderTest {
         @Override
         public void printf(String format, Object... args) {
             printStream.printf(format, args);
-        }
-
-        @Override
-        public void close() {
-            printStream.close();
         }
     }
 }

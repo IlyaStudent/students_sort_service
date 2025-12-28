@@ -7,12 +7,14 @@ import org.university.common.collection.CustomList;
 import org.university.common.model.Student;
 import org.university.feature.ui.io.InputReader;
 import org.university.feature.ui.io.OutputWriter;
+
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.Queue;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ManualInputImplTest {
@@ -37,13 +39,6 @@ class ManualInputImplTest {
     void tearDown() {
         System.setIn(originalIn);
         System.setOut(originalOut);
-
-        if (testReader != null) {
-            testReader.close();
-        }
-        if (testWriter != null) {
-            testWriter.close();
-        }
     }
 
     @Test
@@ -237,11 +232,6 @@ class ManualInputImplTest {
             }
             return input;
         }
-
-        @Override
-        public void close() {
-            inputQueue.clear();
-        }
     }
 
     private static class TestOutputWriter implements OutputWriter {
@@ -269,11 +259,6 @@ class ManualInputImplTest {
         @Override
         public void printf(String format, Object... args) {
             printStream.printf(format, args);
-        }
-
-        @Override
-        public void close() {
-            printStream.close();
         }
     }
 }

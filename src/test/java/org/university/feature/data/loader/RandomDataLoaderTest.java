@@ -46,14 +46,14 @@ class RandomDataLoaderTest {
 
         int count = 5;
         when(mockGenerator.generateStudents(count)).thenReturn(mockStudentList);
-        doNothing().when(mockValidator).validateStudentList(mockStudentList);
+        doNothing().when(mockValidator).validateAndCleanDuplicates(mockStudentList);
 
         CustomList<Student> result = randomDataLoader.loadData(count);
 
         assertNotNull(result);
         assertEquals(mockStudentList, result);
         verify(mockGenerator, times(1)).generateStudents(count);
-        verify(mockValidator, times(1)).validateStudentList(mockStudentList);
+        verify(mockValidator, times(1)).validateAndCleanDuplicates(mockStudentList);
     }
 
     @Test
@@ -64,12 +64,12 @@ class RandomDataLoaderTest {
         for (int count : counts) {
             reset(mockGenerator, mockValidator);
             when(mockGenerator.generateStudents(count)).thenReturn(mockStudentList);
-            doNothing().when(mockValidator).validateStudentList(mockStudentList);
+            doNothing().when(mockValidator).validateAndCleanDuplicates(mockStudentList);
 
             randomDataLoader.loadData(count);
 
             verify(mockGenerator, times(1)).generateStudents(count);
-            verify(mockValidator, times(1)).validateStudentList(mockStudentList);
+            verify(mockValidator, times(1)).validateAndCleanDuplicates(mockStudentList);
         }
     }
 

@@ -1,5 +1,6 @@
 package org.university.feature.ui.io;
 
+import org.university.common.Constants;
 import org.university.common.exception.ValidationException;
 import org.university.common.validator.GroupNumberValidator;
 import org.university.common.validator.Validator;
@@ -11,16 +12,14 @@ import java.io.InputStreamReader;
 
 public class ConsoleReader implements InputReader {
 
-    private static ConsoleReader instance;
+    private static final ConsoleReader INSTANCE = new ConsoleReader();
 
     private final BufferedReader in;
-    private final InputValidator inputValidator;
     private final OutputWriter writer;
     private final Validator<String> groupNumberValidator;
 
     private ConsoleReader() {
         in = new BufferedReader(new InputStreamReader(System.in));
-        inputValidator = new InputValidator();
         writer = ConsoleWriter.getInstance();
         groupNumberValidator = new GroupNumberValidator();
     }
@@ -29,9 +28,9 @@ public class ConsoleReader implements InputReader {
     public int readInt() {
         try {
             String input = in.readLine();
-            while (!inputValidator.isValidInt(input)) {
-                writer.println("\nНеверный ввод. Пожалуйста, введите допустимое целое число.");
-                writer.print("Попробуйте еще раз: ");
+            while (!InputValidator.isValidInt(input)) {
+                writer.println(Constants.MESSAGE_INVALID_INTEGER);
+                writer.print(Constants.PROMPT_TRY_AGAIN);
                 input = in.readLine();
             }
 
@@ -45,14 +44,14 @@ public class ConsoleReader implements InputReader {
     public String readGroupNumber() {
         while (true) {
             try {
-                writer.print("Введите номер группы (формат: XX-NNN, пример: CS-101): ");
+                writer.print(Constants.PROMPT_GROUP_NUMBER);
                 String input = in.readLine();
                 groupNumberValidator.validate(input);
                 return input;
             } catch (IOException e) {
                 throw new RuntimeException("Failed to read data", e);
             } catch (ValidationException e) {
-                writer.println("Некорректный формат ввода. Попробуйте еще раз.\n");
+                writer.println(Constants.MESSAGE_INVALID_INPUT + "\n");
             }
         }
     }
@@ -66,20 +65,7 @@ public class ConsoleReader implements InputReader {
         }
     }
 
-    @Override
-    public void close() {
-        try {
-            in.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed close resource", e);
-        }
-    }
-
     public static ConsoleReader getInstance() {
-        if (instance == null) {
-            instance = new ConsoleReader();
-        }
-
-        return instance;
+        return INSTANCE;
     }
 }

@@ -2,21 +2,61 @@
   {
     "groupNumber": "AZ-111",
     "averageScore": 4.0,
-    "recordBookNumber": "2024-12345"
+    "recordBookNumber": "2024-11110"
+  },
+  {
+    "groupNumber": "AZ-111",
+    "averageScore": 4.2,
+    "recordBookNumber": "2024-11111"
+  },
+  {
+    "groupNumber": "AZ-111",
+    "averageScore": 4.5,
+    "recordBookNumber": "2024-11112"
   },
   {
     "groupNumber": "AZ-121",
-    "averageScore": 4.0,
-    "recordBookNumber": "2024-12345"
+    "averageScore": 3.8,
+    "recordBookNumber": "2024-22220"
+  },
+  {
+    "groupNumber": "AZ-121",
+    "averageScore": 4.1,
+    "recordBookNumber": "2024-22221"
+  },
+  {
+    "groupNumber": "AZ-121",
+    "averageScore": 4,
+    "recordBookNumber": "2024-22222"
   },
   {
     "groupNumber": "CC-555",
     "averageScore": 5.0,
-    "recordBookNumber": "2024-55555"
+    "recordBookNumber": "2024-33330"
+  },
+  {
+    "groupNumber": "CC-555",
+    "averageScore": 4.0,
+    "recordBookNumber": "2024-33331"
+  },
+  {
+    "groupNumber": "CC-555",
+    "averageScore": 2.0,
+    "recordBookNumber": "2024-33332"
   },
   {
     "groupNumber": "CC-666",
-    "averageScore": 5.0,
-    "recordBookNumber": "2024-55555"
+    "averageScore": 4.0,
+    "recordBookNumber": "2024-44440"
+  },
+  {
+    "groupNumber": "CC-666",
+    "averageScore": 3.7,
+    "recordBookNumber": "2024-44441"
+  },
+  {
+    "groupNumber": "CC-666",
+    "averageScore": 4.2,
+    "recordBookNumber": "2024-44442"
   }
 ]

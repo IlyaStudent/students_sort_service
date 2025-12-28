@@ -2,9 +2,11 @@ package org.university.feature.ui;
 
 public final class InputValidator {
 
-    public InputValidator() {}
+    private InputValidator() {
+        throw new AssertionError("Utility class cannot be instantiated");
+    }
 
-    public boolean isValidInt(String value) {
+    public static boolean isValidInt(String value) {
         if (isNullOrEmpty(value)) {
             return false;
         }
@@ -17,20 +19,8 @@ public final class InputValidator {
         }
     }
 
-    public boolean isValidDouble(String value) {
-        if (isNullOrEmpty(value)) {
-            return false;
-        }
 
-        try {
-            Double.parseDouble(value);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    private boolean isNullOrEmpty(String value) {
+    private static boolean isNullOrEmpty(String value) {
         return value == null || value.trim().isEmpty();
     }
 }
