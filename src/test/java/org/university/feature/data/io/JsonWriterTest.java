@@ -71,12 +71,12 @@ class JsonWriterTest {
                 {
                     "groupNumber": "AB-100",
                     "averageScore": 4.0,
-                    "recordBookNumber": "2020-10000"
+                    "recordBookNumber": "2019-99998"
                 },
                 {
                     "groupNumber": "CD-200",
                     "averageScore": 3.5,
-                    "recordBookNumber": "2020-10001"
+                    "recordBookNumber": "2019-99999"
                 }
             ]
             """;
@@ -112,6 +112,35 @@ class JsonWriterTest {
         } finally {
             testFilePath.toFile().setWritable(true);
         }
+    }
+
+    @Test
+    void writeData_ShouldNotAddDuplicatesByRecordBookNumber() throws Exception {
+        Path filePath = tempDir.resolve("duplicates.json");
+
+        String initialJson = """
+            [
+                {
+                    "groupNumber": "AB-100",
+                    "averageScore": 4.0,
+                    "recordBookNumber": "2020-10000"
+                }
+            ]
+            """;
+        Files.writeString(filePath, initialJson);
+
+        CustomList<Student> duplicateStudents = new CustomArrayList<>();
+        duplicateStudents.add(new Student.Builder()
+                .groupNumber("CD-200")
+                .averageScore(3.5)
+                .recordBookNumber("2020-10000")
+                .build());
+
+        jsonWriter.writeData(duplicateStudents, filePath.toString());
+
+        String content = Files.readString(filePath);
+        JsonArray jsonArray = JsonParser.parseString(content).getAsJsonArray();
+        assertEquals(1, jsonArray.size());
     }
 
     @Test

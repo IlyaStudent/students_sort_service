@@ -6,9 +6,7 @@ import org.university.common.collection.CustomList;
 import org.university.common.model.Student;
 import org.university.feature.sorting.strategy.SortStrategy;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
 public class EvenOddQuickSort implements SortStrategy {
 
@@ -17,11 +15,11 @@ public class EvenOddQuickSort implements SortStrategy {
     @SuppressWarnings("unchecked")
     public <T> void sort(CustomList<T> list, Comparator<T> comparator) {
         if (list == null) {
-            throw new IllegalArgumentException(Constants.LIST_CANNOT_BE_NULL);
+            throw new IllegalArgumentException("List cannot be null");
         }
 
         if (comparator == null) {
-            throw new IllegalArgumentException(Constants.COMPARATOR_CANNOT_BE_NULL);
+            throw new IllegalArgumentException("Comparator cannot be null");
         }
 
         if (list.size() <= 1) {
@@ -29,7 +27,7 @@ public class EvenOddQuickSort implements SortStrategy {
         }
 
         if (!(list.get(0) instanceof Student)) {
-            throw new IllegalArgumentException(Constants.EVEN_ODD_SORT_EXCEPTION);
+            throw new IllegalArgumentException("EvenOdd sort works only with Student objects");
         }
 
         CustomList<Student> studentList = (CustomList<Student>) list;
@@ -39,7 +37,7 @@ public class EvenOddQuickSort implements SortStrategy {
     }
 
     private void sortEvenOdd(CustomList<Student> list, Comparator<Student> comparator) {
-        List<Integer> evenIndices = new ArrayList<>();
+        CustomList<Integer> evenIndices = new CustomArrayList<>();
         CustomList<Student> evenStudents = new CustomArrayList<>();
 
         for (int i = 0; i < list.size(); i++) {

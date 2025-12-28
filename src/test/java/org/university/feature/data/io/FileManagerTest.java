@@ -25,7 +25,7 @@ class FileManagerTest {
                 () -> FileManager.getJsonFilepath(fileName)
         );
 
-        assertEquals("Filename should not be empty", exception.getMessage());
+        assertEquals("Filename should not be null or empty", exception.getMessage());
     }
 
     @Test

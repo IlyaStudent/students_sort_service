@@ -1,5 +1,7 @@
 package org.university.common.model;
 
+import org.university.common.Constants;
+
 import java.util.Objects;
 
 public class Student implements Comparable<Student> {
@@ -15,6 +17,7 @@ public class Student implements Comparable<Student> {
 
     @Override
     public int compareTo(Student other) {
+        Objects.requireNonNull(other, "Student to compare cannot be null");
         int result = this.groupNumber.compareTo(other.groupNumber);
         if (result != 0) {
             return result;
@@ -29,12 +32,12 @@ public class Student implements Comparable<Student> {
     }
 
     public static class Builder {
-        private String groupNumber = "1";
-        private double averageScore = 0;
-        private String recordBookNumber = "1";
+        private String groupNumber = "AA-000";
+        private double averageScore = 5.0;
+        private String recordBookNumber = "2000-00000";
 
         public Builder groupNumber(String groupNumber) {
-            this.groupNumber = groupNumber;
+            this.groupNumber = Objects.requireNonNull(groupNumber, "Group number cannot be null");
             return this;
         }
 
@@ -44,7 +47,7 @@ public class Student implements Comparable<Student> {
         }
 
         public Builder recordBookNumber(String recordBookNumber) {
-            this.recordBookNumber = recordBookNumber;
+            this.recordBookNumber = Objects.requireNonNull(recordBookNumber, "Record book number cannot be null");
             return this;
         }
 
@@ -68,7 +71,7 @@ public class Student implements Comparable<Student> {
     @Override
     public String toString() {
         return String.format(
-                "Студент - { Номер группы - [%s], Средний балл - [%.2f], Номер зачетной книжки - [%s] }",
+                Constants.FORMAT_STUDENT_DISPLAY,
                 groupNumber, averageScore, recordBookNumber);
     }
 

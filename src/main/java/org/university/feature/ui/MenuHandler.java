@@ -1,7 +1,7 @@
 package org.university.feature.ui;
 
 import org.university.common.collection.CustomList;
-import org.university.common.util.Constants;
+import org.university.common.Constants;
 import org.university.feature.data.io.FileManager;
 import org.university.feature.data.io.JsonWriter;
 import org.university.feature.data.loader.DataLoader;
@@ -17,10 +17,9 @@ import org.university.feature.ui.option.GeneralSortAlgorithmOption;
 import org.university.feature.ui.option.SpecificSortOption;
 
 import java.util.Comparator;
+import java.util.Objects;
 
 public class MenuHandler {
-
-    private static final String MESSAGE_FINISH_PROGRAM = "Завершение программы...";
 
     private final ConsoleUI consoleUI;
     private final StudentSearcher searcher;
@@ -30,19 +29,19 @@ public class MenuHandler {
     private boolean isRunning = true;
 
     public MenuHandler(ConsoleUI consoleUI, StudentSearcher searcher, JsonWriter jsonWriter, SortContext sortContext) {
-        this.consoleUI = consoleUI;
-        this.searcher = searcher;
-        this.jsonWriter = jsonWriter;
-        this.sortContext = sortContext;
+        this.consoleUI = Objects.requireNonNull(consoleUI, "ConsoleUI cannot be null");
+        this.searcher = Objects.requireNonNull(searcher, "StudentSearcher cannot be null");
+        this.jsonWriter = Objects.requireNonNull(jsonWriter, "JsonWriter cannot be null");
+        this.sortContext = Objects.requireNonNull(sortContext, "SortContext cannot be null");
     }
 
     public void process() {
-        consoleUI.displayMessage("\n=== Система сортировки студентов ===");
+        consoleUI.displayMessage(Constants.MESSAGE_SYSTEM_TITLE);
 
         try {
             processLoadData();
         } catch (Exception e) {
-            consoleUI.displayMessage("Unexpected error: " + e.getMessage());
+            consoleUI.displayMessage(Constants.MESSAGE_UNEXPECTED_ERROR + e.getMessage());
             throw e;
 
         } finally {
@@ -73,7 +72,7 @@ public class MenuHandler {
             DataProcessOption processOption = consoleUI.promptDataProcessOption();
 
             if (processOption == DataProcessOption.BACK) {
-                consoleUI.displayMessage("Возврат к выбору вариантов получения данных...");
+                consoleUI.displayMessage(Constants.MESSAGE_RETURN_TO_LOAD_OPTIONS);
                 return;
             }
 
@@ -86,7 +85,7 @@ public class MenuHandler {
                 case FIND_STUDENT -> {
                     String groupNumber = consoleUI.promptGroupNumberStudent();
                     int count = searcher.countOccurrences(students, groupNumber);
-                    consoleUI.displayMessage("Количество совпадений: " + count + ".");
+                    consoleUI.displayMessage(Constants.MESSAGE_MATCHES_COUNT + count + ".");
                 }
 
                 case SAVE_DATA_TO_FILE ->
@@ -140,12 +139,11 @@ public class MenuHandler {
             sortContext.executeSort(students);
         }
 
-        consoleUI.displayMessage("Данные отсортированы...");
+        consoleUI.displayMessage(Constants.MESSAGE_DATA_SORTED);
         return true;
     }
 
     private void closeAllBeforeExit() {
-        consoleUI.displayMessage(MESSAGE_FINISH_PROGRAM);
-        consoleUI.closeAllResources();
+        consoleUI.displayMessage(Constants.MESSAGE_FINISH_PROGRAM);
     }
 }

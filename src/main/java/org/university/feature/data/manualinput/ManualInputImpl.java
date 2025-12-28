@@ -1,5 +1,6 @@
 package org.university.feature.data.manualinput;
 
+import org.university.common.Constants;
 import org.university.common.collection.CustomArrayList;
 import org.university.common.collection.CustomList;
 import org.university.common.exception.ValidationException;
@@ -39,7 +40,7 @@ public class ManualInputImpl implements ManualInput {
     }
 
     private Student readStudentData(int studentNumber, CustomList<Student> existingStudents) {
-        writer.printf("\nПожалуйста введите данные для студента под номером #%d:%n", studentNumber);
+        writer.printf(Constants.PROMPT_STUDENT_NUMBER, studentNumber);
 
         String groupNumber = readGroupNumber();
         double averageScore = readAverageScore();
@@ -54,7 +55,7 @@ public class ManualInputImpl implements ManualInput {
 
     private String readGroupNumber() {
         while (true) {
-            writer.print("\nВведите номер группы (формат: XX-NNN, пример: CS-101): ");
+            writer.print("\n" + Constants.PROMPT_GROUP_NUMBER);
             String input = reader.readInput().toUpperCase();
 
             GroupNumberValidator validator = new GroupNumberValidator();
@@ -66,7 +67,7 @@ public class ManualInputImpl implements ManualInput {
     private double readAverageScore() {
         while (true) {
             try {
-                writer.print("Введите средний балл (0.0 - 5.0): ");
+                writer.print(Constants.PROMPT_AVERAGE_SCORE);
                 double score = Double.parseDouble(reader.readInput());
                 AverageScoreValidator validator = new AverageScoreValidator();
                 validator.validate(score);
@@ -80,7 +81,7 @@ public class ManualInputImpl implements ManualInput {
 
     private String readRecordBookNumber(CustomList<Student> existingStudents) {
         while (true) {
-            writer.print("Введите номер зачетной книжки (формат: YYYY-NNNNN, пример: 2023-12345): ");
+            writer.print(Constants.PROMPT_RECORD_BOOK);
             String input = reader.readInput();
 
             RecordBookValidator validator = new RecordBookValidator();
@@ -89,7 +90,7 @@ public class ManualInputImpl implements ManualInput {
             boolean isDuplicate = false;
             for (Student student : existingStudents) {
                 if (student.getRecordBookNumber().equals(input)) {
-                    writer.printf("\nСтудент с номером зачетки %s уже существует, повторите ввод\n", input);
+                    writer.printf(Constants.MESSAGE_DUPLICATE_RECORD_BOOK, input);
                     isDuplicate = true;
                     break;
                 }

@@ -3,7 +3,7 @@ package org.university.feature.ui.io;
 import java.io.PrintWriter;
 
 public class ConsoleWriter implements OutputWriter {
-    private static ConsoleWriter instance;
+    private static final ConsoleWriter INSTANCE = new ConsoleWriter();
 
     private final PrintWriter out;
 
@@ -20,21 +20,12 @@ public class ConsoleWriter implements OutputWriter {
         out.flush();
     }
 
-    public void printf(String format, Object ... args) {
+    public void printf(String format, Object... args) {
         out.printf(format, args);
         out.flush();
     }
 
     public static ConsoleWriter getInstance() {
-        if (instance == null) {
-            instance = new ConsoleWriter();
-        }
-
-        return instance;
-    }
-
-    @Override
-    public void close() {
-        out.close();
+        return INSTANCE;
     }
 }

@@ -75,7 +75,7 @@ class DataValidatorTest {
     }
 
     @Test
-    void validateStudentList_ShouldRemoveDuplicateRecordBookNumbers() {
+    void validateAndCleanDuplicates_ShouldRemoveDuplicateRecordBookNumbers() {
         CustomList<Student> students = new CustomArrayList<>();
 
         Student student1 = new Student.Builder()
@@ -107,7 +107,7 @@ class DataValidatorTest {
         students.add(student3);
         students.add(student4);
 
-        dataValidator.validateStudentList(students);
+        dataValidator.validateAndCleanDuplicates(students);
 
         assertEquals(2, students.size());
 

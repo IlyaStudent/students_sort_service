@@ -2,12 +2,10 @@ package org.university.feature.ui.option;
 
 import org.university.common.Constants;
 
-import java.util.Optional;
-
 public enum DataLoadOption implements CodeOption {
-    CONSOLE(1, "Ввести вручную"),
-    FILE(2, "Загрузить из файла"),
-    GENERATION(3, "Сгенерировать случайным образом"),
+    CONSOLE(1, Constants.DESCRIPTION_LOAD_CONSOLE),
+    FILE(2, Constants.DESCRIPTION_LOAD_FILE),
+    GENERATION(3, Constants.DESCRIPTION_LOAD_GENERATION),
     EXIT(4, Constants.DESCRIPTION_OPTION_EXIT);
 
     private final int code;
@@ -28,7 +26,4 @@ public enum DataLoadOption implements CodeOption {
         return code;
     }
 
-    public static Optional<DataLoadOption> fromCode(int code) {
-        return CodeOption.fromCode(code, values());
-    }
 }

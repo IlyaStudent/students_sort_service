@@ -8,11 +8,12 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.university.common.Constants;
 import org.university.common.collection.CustomList;
 import org.university.common.model.Student;
-import org.university.common.util.Constants;
 import java.lang.reflect.Field;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
@@ -64,15 +65,27 @@ class RandomStudentGeneratorTest {
 
     @Test
     void generateStudents_ShouldGenerateValidGroupNumbers() {
+        reset(mockRandom);
 
         int count = 10;
-        when(mockRandom.nextInt(anyInt())).thenReturn(0, 1, 2, 0, 1, 2, 0, 1, 2, 0);
+
+        when(mockRandom.nextInt(Constants.GROUP_PREFIXES.length))
+                .thenReturn(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+
+        when(mockRandom.nextInt(900))
+                .thenReturn(123, 456, 789, 111, 222, 333, 444, 555, 666, 777);
+
+        when(mockRandom.nextInt(26))
+                .thenReturn(10, 11, 12, 13, 14, 15, 16, 17, 18, 19);
+
+        when(mockRandom.nextInt(1000))
+                .thenReturn(100, 200, 300, 400, 500, 600, 700, 800, 900, 999);
+
         when(mockRandom.nextDouble()).thenReturn(0.5);
-        when(mockRandom.nextInt(900)).thenReturn(123, 456, 789, 111, 222, 333, 444, 555, 666, 777);
-        when(mockRandom.nextInt(26)).thenReturn(10); // год 2010
-        when(mockRandom.nextInt(1000)).thenReturn(500);
 
         CustomList<Student> students = generator.generateStudents(count);
+
+        assertEquals(count, students.size());
 
         for (Student student : students) {
             String groupNumber = student.getGroupNumber();
@@ -93,13 +106,26 @@ class RandomStudentGeneratorTest {
 
     @Test
     void generateStudents_ShouldGenerateValidAverageScores() {
+        reset(mockRandom);
+
         int count = 10;
 
         when(mockRandom.nextDouble()).thenReturn(
                 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9
         );
 
+        when(mockRandom.nextInt(Constants.GROUP_PREFIXES.length))
+                .thenReturn(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+        when(mockRandom.nextInt(900))
+                .thenReturn(100, 200, 300, 400, 500, 600, 700, 800, 900, 999);
+        when(mockRandom.nextInt(26))
+                .thenReturn(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+        when(mockRandom.nextInt(1000))
+                .thenReturn(100, 200, 300, 400, 500, 600, 700, 800, 900, 999);
+
         CustomList<Student> students = generator.generateStudents(count);
+
+        assertEquals(count, students.size());
 
         for (Student student : students) {
             Double averageScore = student.getAverageScore();
@@ -118,12 +144,25 @@ class RandomStudentGeneratorTest {
 
     @Test
     void generateStudents_ShouldGenerateValidRecordBookNumbers() {
+        reset(mockRandom);
+
         int count = 10;
 
-        when(mockRandom.nextInt(26)).thenReturn(10, 15, 20, 5, 0, 25, 12, 18, 3, 7);
-        when(mockRandom.nextInt(1000)).thenReturn(100, 200, 300, 400, 500, 600, 700, 800, 900, 999);
+        when(mockRandom.nextInt(26))
+                .thenReturn(10, 11, 12, 13, 14, 15, 16, 17, 18, 19);
+
+        when(mockRandom.nextInt(1000))
+                .thenReturn(100, 200, 300, 400, 500, 600, 700, 800, 900, 999);
+
+        when(mockRandom.nextInt(Constants.GROUP_PREFIXES.length))
+                .thenReturn(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+        when(mockRandom.nextInt(900))
+                .thenReturn(100, 200, 300, 400, 500, 600, 700, 800, 900, 999);
+        when(mockRandom.nextDouble()).thenReturn(0.5);
 
         CustomList<Student> students = generator.generateStudents(count);
+
+        assertEquals(count, students.size());
 
         for (Student student : students) {
             String recordBookNumber = student.getRecordBookNumber();
@@ -152,7 +191,13 @@ class RandomStudentGeneratorTest {
 
     @Test
     void generateAverageScore_ShouldBeRoundedToOneDecimal() {
+        reset(mockRandom);
+
         when(mockRandom.nextDouble()).thenReturn(0.123456);
+        when(mockRandom.nextInt(Constants.GROUP_PREFIXES.length)).thenReturn(0);
+        when(mockRandom.nextInt(900)).thenReturn(100);
+        when(mockRandom.nextInt(26)).thenReturn(10);
+        when(mockRandom.nextInt(1000)).thenReturn(500);
 
         CustomList<Student> students = generator.generateStudents(1);
         Double score = students.get(0).getAverageScore();
@@ -167,8 +212,13 @@ class RandomStudentGeneratorTest {
 
     @Test
     void generateRecordBookNumber_ShouldHaveCorrectFormat() {
-        when(mockRandom.nextInt(26)).thenReturn(5); // 2005
+        reset(mockRandom);
+
+        when(mockRandom.nextInt(26)).thenReturn(5);
         when(mockRandom.nextInt(1000)).thenReturn(123);
+        when(mockRandom.nextInt(Constants.GROUP_PREFIXES.length)).thenReturn(0);
+        when(mockRandom.nextInt(900)).thenReturn(100);
+        when(mockRandom.nextDouble()).thenReturn(0.5);
 
         CustomList<Student> students = generator.generateStudents(1);
         String recordBookNumber = students.get(0).getRecordBookNumber();
@@ -177,14 +227,24 @@ class RandomStudentGeneratorTest {
     }
 
     private void mockRandomBehavior() {
+        AtomicInteger yearCounter = new AtomicInteger(0);
+        AtomicInteger offsetCounter = new AtomicInteger(0);
+        AtomicInteger groupNumberCounter = new AtomicInteger(0);
+        AtomicInteger prefixCounter = new AtomicInteger(0);
+
         when(mockRandom.nextInt(anyInt())).thenAnswer(invocation -> {
             int bound = invocation.getArgument(0);
-            return bound > 0 ? 0 : 0;
+            if (bound == 900) {
+                return groupNumberCounter.getAndIncrement() % 900;
+            } else if (bound == 26) {
+                return yearCounter.getAndIncrement() % 26;
+            } else if (bound == 1000) {
+                return offsetCounter.getAndIncrement() % 1000;
+            } else if (bound == Constants.GROUP_PREFIXES.length) {
+                return prefixCounter.getAndIncrement() % Constants.GROUP_PREFIXES.length;
+            }
+            return 0;
         });
         when(mockRandom.nextDouble()).thenReturn(0.5);
-
-        when(mockRandom.nextInt(900)).thenReturn(123);
-        when(mockRandom.nextInt(26)).thenReturn(10);
-        when(mockRandom.nextInt(1000)).thenReturn(500);
     }
 }

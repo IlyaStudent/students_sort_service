@@ -5,12 +5,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.university.common.Constants;
 import org.university.common.collection.CustomList;
 import org.university.common.model.Student;
-import org.university.common.util.Constants;
 import org.university.common.validator.DataValidator;
 import org.university.feature.data.io.JsonReader;
+
 import java.lang.reflect.Field;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
@@ -48,7 +50,7 @@ class FileDataLoaderReflectionTest {
 
         when(mockJsonReader.parseStudents(Constants.JSON_FILENAME, count))
                 .thenReturn(mockStudentList);
-        doNothing().when(mockDataValidator).validateStudentList(mockStudentList);
+        doNothing().when(mockDataValidator).validateAndCleanDuplicates(mockStudentList);
 
         CustomList<Student> result = fileDataLoader.loadData(count);
 
@@ -56,7 +58,7 @@ class FileDataLoaderReflectionTest {
         verify(mockJsonReader, times(1))
                 .parseStudents(Constants.JSON_FILENAME, count);
         verify(mockDataValidator, times(1))
-                .validateStudentList(mockStudentList);
+                .validateAndCleanDuplicates(mockStudentList);
     }
 
     @Test

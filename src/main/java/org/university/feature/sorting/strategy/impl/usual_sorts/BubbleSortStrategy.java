@@ -11,11 +11,11 @@ public class BubbleSortStrategy implements SortStrategy {
     @Override
     public <T> void sort(CustomList<T> list, Comparator<T> comparator) {
         if (list == null) {
-            throw new IllegalArgumentException(Constants.LIST_CANNOT_BE_NULL);
+            throw new IllegalArgumentException("List cannot be null");
         }
 
         if (comparator == null) {
-            throw new IllegalArgumentException(Constants.COMPARATOR_CANNOT_BE_NULL);
+            throw new IllegalArgumentException("Comparator cannot be null");
         }
 
         int n = list.size();

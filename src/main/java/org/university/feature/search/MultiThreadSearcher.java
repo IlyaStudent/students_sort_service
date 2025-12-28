@@ -1,5 +1,6 @@
 package org.university.feature.search;
 
+import org.university.common.Constants;
 import org.university.common.collection.CustomArrayList;
 import org.university.common.collection.CustomList;
 import org.university.common.model.Student;
@@ -15,6 +16,7 @@ public class MultiThreadSearcher implements StudentSearcher {
 
     @Override
     public int countOccurrences(CustomList<Student> collection, String findGroupNumber) {
+        Objects.requireNonNull(findGroupNumber, "Group number to find cannot be null");
 
         if (collection == null || collection.isEmpty()) {
             return 0;
@@ -40,8 +42,13 @@ public class MultiThreadSearcher implements StudentSearcher {
     }
 
     private int getResultExecuteThread(Future<Integer> executed)  {
+        Objects.requireNonNull(executed, "Future cannot be null");
         try {
-            return executed.get();
+            return executed.get(Constants.SEARCH_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            executed.cancel(true);
+            throw new RuntimeException("Search operation timed out after " +
+                    Constants.SEARCH_TIMEOUT_SECONDS + " seconds", e);
         } catch (InterruptedException e) {
             executed.cancel(true);
             Thread.currentThread().interrupt();
@@ -57,6 +64,8 @@ public class MultiThreadSearcher implements StudentSearcher {
     }
 
     private CustomList<Searcher> createTasks(CustomList<Student> collection, String toFind, int threadCount) {
+        Objects.requireNonNull(collection, "Collection cannot be null");
+        Objects.requireNonNull(toFind, "String to find cannot be null");
 
         CustomList<Searcher> tasks = new CustomArrayList<>();
         int sizeStudents = collection.size();

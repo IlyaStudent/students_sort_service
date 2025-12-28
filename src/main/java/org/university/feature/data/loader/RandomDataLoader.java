@@ -19,7 +19,7 @@ public class RandomDataLoader implements DataLoader {
     @Override
     public CustomList<Student> loadData(int count) throws DataLoadException {
         CustomList<Student> students = generator.generateStudents(count);
-        dataValidator.validateStudentList(students);
+        dataValidator.validateAndCleanDuplicates(students);
         return students;
     }
 

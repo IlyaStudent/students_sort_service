@@ -1,5 +1,6 @@
 package org.university.common.validator;
 
+import org.university.common.Constants;
 import org.university.common.exception.ValidationException;
 
 public class RecordBookValidator implements Validator<String> {
@@ -8,12 +9,12 @@ public class RecordBookValidator implements Validator<String> {
     public void validate(String recordBookNumber) {
         if (recordBookNumber == null || recordBookNumber.isEmpty()) {
             throw new ValidationException(
-                    "Record book cannot be empty"
+                    Constants.ERROR_RECORD_BOOK_EMPTY
             );
         }
-        if (!recordBookNumber.matches("\\d{4}-\\d{5}")) {
+        if (!recordBookNumber.matches(Constants.PATTERN_RECORD_BOOK)) {
             throw new ValidationException(
-                    "Record book number field value is invalid ",
+                    Constants.ERROR_RECORD_BOOK_INVALID,
                     "recordBookNumber",
                     recordBookNumber
             );

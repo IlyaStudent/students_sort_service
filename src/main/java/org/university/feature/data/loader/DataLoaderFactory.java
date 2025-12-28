@@ -4,12 +4,12 @@ import org.university.feature.ui.io.ConsoleReader;
 import org.university.feature.ui.io.ConsoleWriter;
 import org.university.feature.ui.option.DataLoadOption;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class DataLoaderFactory {
-    private static final Map<DataLoadOption, DataLoader> LOADERS = new HashMap<>();
+    private static final Map<DataLoadOption, DataLoader> LOADERS = new ConcurrentHashMap<>();
 
     private DataLoaderFactory() {
         throw new AssertionError("Cannot instantiate factory class");
@@ -28,12 +28,6 @@ public final class DataLoaderFactory {
 
     public static DataLoader getInstanceFromOption(DataLoadOption loadOption) {
         Objects.requireNonNull(loadOption, "Load option cannot be null");
-        if (LOADERS.containsKey(loadOption)) {
-            return LOADERS.get(loadOption);
-        } else {
-            DataLoader loader = createLoader(loadOption);
-            LOADERS.put(loadOption, loader);
-            return loader;
-        }
+        return LOADERS.computeIfAbsent(loadOption, DataLoaderFactory::createLoader);
     }
 }

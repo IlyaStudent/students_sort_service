@@ -5,7 +5,5 @@ public interface OutputWriter {
 
     void print(String text);
 
-    void printf(String format, Object ... args);
-
-    void close();
+    void printf(String format, Object... args);
 }

@@ -1,5 +1,6 @@
 package org.university.common.validator;
 
+import org.university.common.Constants;
 import org.university.common.collection.CustomArrayList;
 import org.university.common.collection.CustomList;
 import org.university.common.exception.ValidationException;
@@ -23,16 +24,20 @@ public class DataValidator {
     public void validateStudentList(CustomList<Student> students) {
         if (students == null || students.isEmpty()) {
             throw new ValidationException(
-                    "List cannot be empty"
+                    Constants.ERROR_LIST_EMPTY
             );
         }
         for (Student student : students) {
             validateStudent(student);
         }
-        removeDuplicates(students);
     }
 
-    private void removeDuplicates(CustomList<Student> students) {
+    public void validateAndCleanDuplicates(CustomList<Student> students) {
+        validateStudentList(students);
+        removeDuplicatesInPlace(students);
+    }
+
+    private void removeDuplicatesInPlace(CustomList<Student> students) {
         Set<String> seenRecordBooks = new HashSet<>();
         CustomList<Student> uniqueStudents = new CustomArrayList<>();
 
@@ -55,7 +60,7 @@ public class DataValidator {
     private void validateStudent(Student student) {
         if (student == null) {
             throw new ValidationException(
-                    "Student cannot be null"
+                    Constants.ERROR_STUDENT_NULL
             );
         }
         groupNumberValidator.validate(student.getGroupNumber());

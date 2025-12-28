@@ -1,7 +1,7 @@
 package org.university.feature.data.loader;
 
 import org.university.common.exception.ValidationException;
-import org.university.common.util.Constants;
+import org.university.common.Constants;
 import org.university.common.collection.CustomList;
 import org.university.common.exception.DataLoadException;
 import org.university.common.model.Student;
@@ -21,7 +21,7 @@ public class FileDataLoader implements DataLoader {
     @Override
     public CustomList<Student> loadData(int count) throws DataLoadException, ValidationException {
         CustomList<Student> students = jsonReader.parseStudents(Constants.JSON_FILENAME, count);
-        dataValidator.validateStudentList(students);
+        dataValidator.validateAndCleanDuplicates(students);
         return students;
     }
 
