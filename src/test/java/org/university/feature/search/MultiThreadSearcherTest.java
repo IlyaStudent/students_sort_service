@@ -1,4 +1,4 @@
-package org.university.common.feature.search;
+package org.university.feature.search;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -9,7 +9,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.university.common.collection.CustomArrayList;
 import org.university.common.collection.CustomList;
 import org.university.common.model.Student;
-import org.university.feature.search.MultiThreadSearcher;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
