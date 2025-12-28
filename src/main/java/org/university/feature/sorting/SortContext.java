@@ -1,6 +1,7 @@
-package org.university.feature.sorting.strategy;
+package org.university.feature.sorting;
 
 import org.university.common.collection.CustomList;
+import org.university.feature.sorting.strategy.SortStrategy;
 
 import java.util.Comparator;
 import java.util.Objects;
