@@ -4,12 +4,12 @@ import org.university.feature.ui.io.ConsoleReader;
 import org.university.feature.ui.io.ConsoleWriter;
 import org.university.feature.ui.option.DataLoadOption;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 
 public final class DataLoaderFactory {
-    private static final Map<DataLoadOption, DataLoader> LOADERS = new ConcurrentHashMap<>();
+    private static final Map<DataLoadOption, DataLoader> LOADERS = new HashMap<>();
 
     private DataLoaderFactory() {
         throw new AssertionError("Cannot instantiate factory class");
