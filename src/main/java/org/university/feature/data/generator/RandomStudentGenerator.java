@@ -47,7 +47,7 @@ public class RandomStudentGenerator implements DataGenerator{
     }
 
     private double generateAverageScore() {
-        double score = 0.1 + random.nextDouble() * 4.9;
+        double score = 2.0 + random.nextDouble() * 3.0;
         return Math.round(score * 10.0) / 10.0;
     }
 
