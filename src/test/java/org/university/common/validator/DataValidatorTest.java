@@ -144,7 +144,7 @@ class AverageScoreValidatorTest {
 
     @Test
     void validate_ShouldNotThrowException_WhenScoreIsMinimumValid() {
-        assertDoesNotThrow(() -> validator.validate(1.0));
+        assertDoesNotThrow(() -> validator.validate(2.0));
     }
 
     @Test
