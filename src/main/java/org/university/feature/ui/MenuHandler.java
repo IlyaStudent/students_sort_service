@@ -7,7 +7,7 @@ import org.university.feature.data.io.JsonWriter;
 import org.university.feature.data.loader.DataLoader;
 import org.university.feature.data.loader.DataLoaderFactory;
 import org.university.feature.search.StudentSearcher;
-import org.university.feature.sorting.strategy.SortContext;
+import org.university.feature.sorting.SortContext;
 import org.university.feature.sorting.strategy.impl.SortFactory;
 import org.university.feature.ui.io.ConsoleUI;
 import org.university.feature.ui.option.DataLoadOption;
