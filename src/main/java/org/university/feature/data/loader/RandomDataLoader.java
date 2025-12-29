@@ -4,11 +4,12 @@ import org.university.common.collection.CustomList;
 import org.university.common.exception.DataLoadException;
 import org.university.common.model.Student;
 import org.university.common.validator.DataValidator;
+import org.university.feature.data.generator.DataGenerator;
 import org.university.feature.data.generator.RandomStudentGenerator;
 
 public class RandomDataLoader implements DataLoader {
 
-    private final RandomStudentGenerator generator;
+    private final DataGenerator generator;
     private final DataValidator dataValidator;
 
     public RandomDataLoader() {
