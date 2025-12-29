@@ -22,7 +22,7 @@ public final class Constants {
             "CS", "IT", "SE", "AI", "CY", "MA", "PH", "BI", "EC", "EN",
             "CH", "PH", "ME", "EE", "CE", "BT", "MT", "AT", "NE", "RO"
     };
-    public static final double MIN_AVERAGE_SCORE  = 0.0;
+    public static final double MIN_AVERAGE_SCORE  = 2.0;
     public static final double MAX_AVERAGE_SCORE  = 5.0;
 
     // Validation patterns
@@ -60,7 +60,7 @@ public final class Constants {
 
     // UI prompts
     public static final String PROMPT_GROUP_NUMBER = "Введите номер группы (формат: XX-NNN, пример: CS-101): ";
-    public static final String PROMPT_AVERAGE_SCORE = "Введите средний балл (0.0 - 5.0): ";
+    public static final String PROMPT_AVERAGE_SCORE = "Введите средний балл (2.0 - 5.0): ";
     public static final String PROMPT_RECORD_BOOK = "Введите номер зачетной книжки (формат: YYYY-NNNNN, пример: 2023-12345): ";
     public static final String PROMPT_TRY_AGAIN = "Попробуйте еще раз: ";
     public static final String PROMPT_STUDENT_NUMBER = "\nПожалуйста введите данные для студента под номером #%d:%n";
