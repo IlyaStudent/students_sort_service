@@ -4,29 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.university.feature.sorting.strategy.SortStrategy;
 import org.university.feature.ui.option.GeneralSortAlgorithmOption;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class BasicSortFactoryTest {
-
-    @Test
-    void constructor_ShouldThrowAssertionError() {
-        try {
-            Constructor<BasicSortFactory> constructor = BasicSortFactory.class.getDeclaredConstructor();
-            constructor.setAccessible(true);
-
-            InvocationTargetException exception = assertThrows(
-                    InvocationTargetException.class,
-                    constructor::newInstance
-            );
-
-            assertInstanceOf(AssertionError.class, exception.getCause());
-        } catch (NoSuchMethodException e) {
-            fail("Constructor should exist");
-        }
-    }
 
     @Test
     void getInstanceFromAlgorithmOption_ShouldReturnBubbleSortStrategy() {

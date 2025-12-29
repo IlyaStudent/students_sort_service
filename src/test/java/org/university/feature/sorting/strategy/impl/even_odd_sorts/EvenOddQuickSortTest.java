@@ -21,7 +21,7 @@ class EvenOddQuickSortTest {
 
     @Test
     void getName_ShouldReturnEvenOddQuickSortName() {
-        assertEquals("ЧетНечет Быстрая сортировка", evenOddQuickSort.getName());
+        assertEquals("Четно-нечетная быстрая сортировка", evenOddQuickSort.getName());
     }
 
     @Test

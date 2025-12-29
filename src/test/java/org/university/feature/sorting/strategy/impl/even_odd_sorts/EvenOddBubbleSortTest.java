@@ -21,7 +21,7 @@ class EvenOddBubbleSortTest {
 
     @Test
     void getName_ShouldReturnEvenOddBubbleSortName() {
-        assertEquals("ЧетНечет Пузырьковая сортировка", evenOddBubbleSort.getName());
+        assertEquals("Четно-нечетная пузырьковая сортировка", evenOddBubbleSort.getName());
     }
 
     @Test

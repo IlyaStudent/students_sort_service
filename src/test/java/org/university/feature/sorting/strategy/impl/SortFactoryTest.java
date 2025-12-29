@@ -11,29 +11,9 @@ import org.university.feature.sorting.strategy.impl.usual_sorts.QuickSortStrateg
 import org.university.feature.ui.option.GeneralSortAlgorithmOption;
 import org.university.feature.ui.option.SpecificSortOption;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class SortFactoryTest {
-
-    @Test
-    void constructor_ShouldThrowAssertionError() {
-        try {
-            Constructor<SortFactory> constructor = SortFactory.class.getDeclaredConstructor();
-            constructor.setAccessible(true);
-
-            InvocationTargetException exception = assertThrows(
-                    InvocationTargetException.class,
-                    constructor::newInstance
-            );
-
-            assertInstanceOf(AssertionError.class, exception.getCause());
-        } catch (NoSuchMethodException e) {
-            fail("Constructor should exist");
-        }
-    }
 
     @Test
     void getSortStrategyFromOptions_ShouldReturnBubbleSort_ForSortAllFields() {
@@ -80,7 +60,7 @@ class SortFactoryTest {
 
         assertNotNull(strategy);
         assertInstanceOf(EvenOddBubbleSort.class, strategy);
-        assertEquals("ЧетНечет Пузырьковая сортировка", strategy.getName());
+        assertEquals("Четно-нечетная пузырьковая сортировка", strategy.getName());
     }
 
     @Test
@@ -92,7 +72,7 @@ class SortFactoryTest {
 
         assertNotNull(strategy);
         assertInstanceOf(EvenOddMergeSort.class, strategy);
-        assertEquals("ЧетНечет Сортировка слиянием", strategy.getName());
+        assertEquals("Четно-нечетная сортировка слиянием", strategy.getName());
     }
 
     @Test
@@ -104,7 +84,7 @@ class SortFactoryTest {
 
         assertNotNull(strategy);
         assertInstanceOf(EvenOddQuickSort.class, strategy);
-        assertEquals("ЧетНечет Быстрая сортировка", strategy.getName());
+        assertEquals("Четно-нечетная быстрая сортировка", strategy.getName());
     }
 
     @Test

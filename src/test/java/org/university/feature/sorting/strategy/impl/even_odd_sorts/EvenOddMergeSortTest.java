@@ -21,7 +21,7 @@ class EvenOddMergeSortTest {
 
     @Test
     void getName_ShouldReturnEvenOddMergeSortName() {
-        assertEquals("ЧетНечет Сортировка слиянием", evenOddMergeSort.getName());
+        assertEquals("Четно-нечетная сортировка слиянием", evenOddMergeSort.getName());
     }
 
     @Test
